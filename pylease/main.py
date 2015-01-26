@@ -2,19 +2,23 @@ import os
 import sys
 from pylease.caution import DirtyCaution, ReplacedSetup
 from pylease.ex import VersionRetrievalError
-from pylease.vspec import version as VersionSpecification
 
 __author__ = 'bagrat'
 
 from optparse import OptionParser
 from releasemgmt import default_level, release
 
-_parser = OptionParser(usage="pylease [major | minor | patch | dev] [setuptools_args]")
+_parser = OptionParser(
+    usage="pylease [major | minor | patch | dev] [setuptools_args]")
 
-_parser.add_option('--dev', action="store_const", dest='level', const='dev', default=default_level)
-_parser.add_option('--patch', action="store_const", dest='level', const='patch', default=default_level)
-_parser.add_option('--minor', action="store_const", dest='level', const='minor', default=default_level)
-_parser.add_option('--major', action="store_const", dest='level', const='major', default=default_level)
+_parser.add_option('--dev', action="store_const", dest='level',
+                   const='dev', default=default_level)
+_parser.add_option('--patch', action="store_const", dest='level',
+                   const='patch', default=default_level)
+_parser.add_option('--minor', action="store_const", dest='level',
+                   const='minor', default=default_level)
+_parser.add_option('--major', action="store_const", dest='level',
+                   const='major', default=default_level)
 
 
 def main():

@@ -17,4 +17,3 @@ class Test(TestCase):
         # anothername(v, var_name='anothername')
         #
         # eq_(anothername, v)
-

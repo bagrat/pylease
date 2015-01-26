@@ -3,7 +3,7 @@ import sys
 
 # The dirtiest hack in the world
 import setuptools
-from pylease.ex import PyleaseError, VersionRetrievalError, UploadError
+from pylease.ex import PyleaseError, VersionRetrievalError
 from pylease.releasemgmt import rollback
 
 _setuptools_success_msg_prefix = 'Server response '
@@ -44,7 +44,8 @@ class DirtyCaution(object):
 
         lines = self.master_io.getvalue().splitlines()
 
-        if not lines[len(lines) - 1].startswith(_setuptools_success_msg_prefix):
+        if not lines[len(lines) - 1]\
+                .startswith(_setuptools_success_msg_prefix):
             rollback(self.current_version)
 
         return exc_type is None

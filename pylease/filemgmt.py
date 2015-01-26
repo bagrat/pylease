@@ -22,13 +22,16 @@ def _find_version_class_name():
                 break
 
     if not result:
-        raise VersionSpecError('The version specification module MUST define exactly one class.')
+        raise VersionSpecError('The version specification module MUST define '
+                               'exactly one class.')
 
     return result
 
 
 _version_name = _find_version_class_name()
-_version_regexp = "(?P<start>{version_name}\([\'\"])[0-9a-zA-Z\.]*(?P<end>[\'\"]\))".format(version_name=_version_name)
+_version_regexp = "(?P<start>{version_name}\([\'\"])" \
+                  "[0-9a-zA-Z\.]*" \
+                  "(?P<end>[\'\"]\))".format(version_name=_version_name)
 
 
 def replace_version(setup_py, to):
@@ -37,7 +40,8 @@ def replace_version(setup_py, to):
     replacement = "\g<start>{to}\g<end>".format(to=to)
 
     if not len(matches) == 1:
-        raise VersionSpecError('More than one or no any version specification found.')
+        raise VersionSpecError(
+            'More than one or no any version specification found.')
 
     return re_obj.sub(replacement, setup_py)
 

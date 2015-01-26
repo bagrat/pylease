@@ -1,8 +1,8 @@
 import textwrap
 from unittest import TestCase
-from nose.tools import *
+from nose.tools import ok_, eq_
 from pylease.ex import VersionSpecError
-from pylease.filemgmt import replace_version, update_file
+from pylease.filemgmt import replace_version
 
 __author__ = 'bagrat'
 
@@ -26,7 +26,8 @@ class Test(TestCase):
 
         replaced_setup_py = replace_version(old_setup_py, new_version)
 
-        eq_(replaced_setup_py, new_setup_py, 'replace_version() must update the version')
+        eq_(replaced_setup_py, new_setup_py,
+            'replace_version() must update the version')
 
     def test_more_than_one_spec(self):
         setup_py_tp = textwrap.dedent("""
@@ -43,11 +44,11 @@ class Test(TestCase):
         new_version = 'n3w.v3rs10n'
 
         old_setup_py = setup_py_tp.format(setup_py_tp, version=old_version)
-        new_setup_py = setup_py_tp.format(setup_py_tp, version=new_version)
+        setup_py_tp.format(setup_py_tp, version=new_version)
 
         raises_spec_error = False
         try:
-            replaced_setup_py = replace_version(old_setup_py, new_version)
+            replace_version(old_setup_py, new_version)
         except VersionSpecError:
             raises_spec_error = True
 

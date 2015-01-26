@@ -1,4 +1,3 @@
-import urllib
 from pylease.ex import ReleaseError
 from pylease.filemgmt import update_file
 from pylease.vermgmt import DevedVersion
@@ -15,7 +14,8 @@ def release(current, level=default_level, count=1):
 
     if level not in _levels:
         raise ReleaseError(
-            'Unknown release level: {level}\nShould be one of those: {levels}'.format(level=level, levels=_levels))
+            'Unknown release level: {level}\nShould be one of those: {levels}'
+            .format(level=level, levels=_levels))
 
     if level == 'major':
         current_version.increase_major(count)

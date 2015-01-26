@@ -1,4 +1,3 @@
-from pylease import ex
 from pylease.util import get_caller_module
 
 __author__ = 'bagrat'

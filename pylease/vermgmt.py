@@ -7,7 +7,8 @@ __author__ = 'bagrat'
 
 class DevedVersion(StrictVersion):
     _strict_re_str = StrictVersion.version_re.pattern[1:-1]
-    _deved_re_str = r'^({strict_re}) (\.dev(\d+))?$'.format(strict_re=_strict_re_str)
+    _deved_re_str = r'^({strict_re}) (\.dev(\d+))?$'\
+        .format(strict_re=_strict_re_str)
     _deved_re = re.compile(_deved_re_str, re.VERBOSE)
 
     def __init__(self, vstring=None):
@@ -61,5 +62,3 @@ class DevedVersion(StrictVersion):
         suffix = '.dev{ver}'.format(ver=self.dev) if self.dev > 0 else ''
 
         return '{prefix}{suffix}'.format(prefix=prefix, suffix=suffix)
-
-
