@@ -1,6 +1,9 @@
 __author__ = 'bagrat'
 
 from setuptools import setup, find_packages
+from pylease import version
+
+version('0.1')
 
 tests_require = ['nose', 'coverage']
 
@@ -24,7 +27,7 @@ config = {
     'url': 'git@github.com:n9code/pylease.git',
     'download_url': 'git@github.com:n9code/pylease.git',
     'author_email': 'bagrat@aznauryan.org',
-    'version': '0.1',
+    'version': version,
     'install_requires': install_requires,
     'tests_require': tests_require,
     'classifiers': classifiers,
