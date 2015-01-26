@@ -37,7 +37,18 @@ def replace_version(setup_py, to):
     replacement = "\g<start>{to}\g<end>".format(to=to)
 
     if not len(matches) == 1:
-        raise VersionSpecError('More than one version specification found.')
+        raise VersionSpecError('More than one or no any version specification found.')
 
     return re_obj.sub(replacement, setup_py)
 
+
+def update_file(to):
+    filename = 'setup.py'
+
+    with open(filename, 'r') as setup_py:
+        content = setup_py.read()
+
+        new_content = replace_version(content, to)
+
+    with open(filename, 'w') as setup_py:
+        setup_py.write(new_content)

@@ -2,7 +2,7 @@ import textwrap
 from unittest import TestCase
 from nose.tools import *
 from pylease.ex import VersionSpecError
-from pylease.filemgmt import replace_version
+from pylease.filemgmt import replace_version, update_file
 
 __author__ = 'bagrat'
 
@@ -70,3 +70,4 @@ class Test(TestCase):
             raises_ver_spec_err = True
 
         ok_(raises_ver_spec_err)
+

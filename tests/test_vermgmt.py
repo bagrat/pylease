@@ -27,7 +27,7 @@ class Test(TestCase):
         ver.increase_patch()
         ver.increase_dev()
 
-        eq_(str(ver), '2.3.4dev5')
+        eq_(str(ver), '2.1.1dev1')
 
         raises_value_error = False
         try:

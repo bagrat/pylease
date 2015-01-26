@@ -1,6 +1,7 @@
-__author__ = 'bagrat'
+from pylease import ex
+from pylease.util import get_caller_module
 
-from pyflect.core.instor.instor import _get_caller_module
+__author__ = 'bagrat'
 
 
 # This class should be the only class in this file
@@ -13,7 +14,7 @@ class version(str):
         if not var_name:
             var_name = cls.__name__
 
-        module = _get_caller_module(1)
+        module = get_caller_module(1)
         module.__dict__[var_name] = obj
 
         return obj

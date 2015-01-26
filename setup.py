@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 tests_require = ['nose', 'coverage']
 
-install_requires = ['pyflect']
+install_requires = []
 
 classifiers = ['License :: OSI Approved :: MIT License',
                'Intended Audience :: Developers',
@@ -31,7 +31,12 @@ config = {
     'packages': find_packages(),
     'name': 'pylease',
     'license': 'MIT',
-    'keywords': 'release version versioning'
+    'keywords': 'release version versioning',
+    'entry_points': {
+        'console_scripts': [
+            'pylease = pylease.main:main'
+        ]
+    }
 }
 
 setup(**config)
