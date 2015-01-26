@@ -14,7 +14,7 @@ class TestReleaseMgmt(TestCase):
         def get_expected_version():
             return expected_version
 
-        def mock_update_file(version, file):
+        def mock_update_file(version):
             eq_(version, get_expected_version())
         releasemgmt.update_file = mock_update_file
 
@@ -26,11 +26,11 @@ class TestReleaseMgmt(TestCase):
 
         ok_(raises_error)
 
-        expected_version = '1.2.3dev4'
-        releasemgmt.release('1.2.3dev3', 'dev')
+        expected_version = '1.2.3.dev4'
+        releasemgmt.release('1.2.3.dev3', 'dev')
         expected_version = '1.2.4'
-        releasemgmt.release('1.2.3dev3', 'patch')
+        releasemgmt.release('1.2.3.dev3', 'patch')
         expected_version = '1.3'
-        releasemgmt.release('1.2.3dev3', 'minor')
+        releasemgmt.release('1.2.3.dev3', 'minor')
         expected_version = '2.0'
-        releasemgmt.release('1.2.3dev3', 'major')
+        releasemgmt.release('1.2.3.dev3', 'major')
