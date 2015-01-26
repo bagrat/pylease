@@ -42,7 +42,7 @@ def replace_version(setup_py, to):
     return re_obj.sub(replacement, setup_py)
 
 
-def update_file(to):
+def update_file(to):  # pragma: no cover
     filename = 'setup.py'
 
     with open(filename, 'r') as setup_py:

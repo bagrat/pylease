@@ -70,4 +70,3 @@ class Test(TestCase):
             raises_ver_spec_err = True
 
         ok_(raises_ver_spec_err)
-

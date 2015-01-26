@@ -29,5 +29,5 @@ def release(current, level=default_level, count=1):
     update_file(str(current_version))
 
 
-def rollback(previous):
-    update_file(str(previous))
+def rollback(previous_version):  # pragma: no cover
+    update_file(str(previous_version))

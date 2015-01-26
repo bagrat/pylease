@@ -16,7 +16,6 @@ class ReleaseError(PyleaseError):
 class VersionRetrievalError(PyleaseError):
     def __init__(self, version, *args, **kwargs):
         super(VersionRetrievalError, self).__init__(*args, **kwargs)
-
         self.version = version
 
 
