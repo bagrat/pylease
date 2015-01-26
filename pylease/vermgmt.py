@@ -6,6 +6,9 @@ __author__ = 'bagrat'
 
 
 class DevedVersion(StrictVersion):
+    """
+    An extension to StrictVersion, which includes a dev component.
+    """
     _strict_re_str = StrictVersion.version_re.pattern[1:-1]
     _deved_re_str = r'^({strict_re}) (\.dev(\d+))?$'\
         .format(strict_re=_strict_re_str)
@@ -27,6 +30,9 @@ class DevedVersion(StrictVersion):
         StrictVersion.__init__(self, vstring)
 
     def _increase_version(self, count=1, index=0):
+        """
+        Increase the index'th level of the version by count
+        """
         old_version = self.version
 
         old_comp = old_version[index]
@@ -46,15 +52,27 @@ class DevedVersion(StrictVersion):
         self.version = tuple(new_version)
 
     def increase_major(self, count=1):
+        """
+        Increase the major version by count
+        """
         self._increase_version(count, 0)
 
     def increase_minor(self, count=1):
+        """
+        Increase the minor version by count
+        """
         self._increase_version(count, 1)
 
     def increase_patch(self, count=1):
+        """
+        Increase the patch version by count
+        """
         self._increase_version(count, 2)
 
     def increase_dev(self, level=1):
+        """
+        Increase the dev version by count
+        """
         self.dev += level
 
     def __str__(self):

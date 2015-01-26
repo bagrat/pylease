@@ -8,6 +8,12 @@ __author__ = 'bagrat'
 
 
 def _find_version_class_name():
+    """
+    Finds the name of the version specification class. Done for easy
+     renaming in future.
+    :return: The name of the version specification class.
+    """
+
     names = dir(vspec)
 
     result = None
@@ -35,6 +41,14 @@ _version_regexp = "(?P<start>{version_name}\([\'\"])" \
 
 
 def replace_version(setup_py, to):
+    """
+    Replaces the value of the version specification value in the contents of
+    setup_py to to.
+    :param setup_py: The string containing version specification
+    :param to: The new version to be set
+    :return:
+    """
+
     re_obj = re.compile(_version_regexp)
     matches = re_obj.findall(setup_py)
     replacement = "\g<start>{to}\g<end>".format(to=to)
@@ -47,6 +61,11 @@ def replace_version(setup_py, to):
 
 
 def update_file(to):  # pragma: no cover
+    """
+    Update setup.py contents. See replace_version.
+    :param to: The new version to be set.
+    """
+
     filename = 'setup.py'
 
     with open(filename, 'r') as setup_py:

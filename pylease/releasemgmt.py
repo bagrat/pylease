@@ -10,6 +10,16 @@ default_level = _levels[_default_level_index]
 
 
 def release(current, level=default_level, count=1):
+    """
+    Increases the version specification in setup.py by count in the
+    specified version level.
+
+    :param current: The current version
+    :param level: The level to be released to, i.e. one of the following -
+                    major, minor, patch, dev
+    :param count: The number to increase the level by
+    """
+
     current_version = DevedVersion(current)
 
     if level not in _levels:
@@ -30,4 +40,9 @@ def release(current, level=default_level, count=1):
 
 
 def rollback(previous_version):  # pragma: no cover
+    """
+    Rollback the version specification in setup.py to the previous_version
+    :param previous_version: The previous version
+    """
+
     update_file(str(previous_version))

@@ -1,7 +1,7 @@
 import os
 import sys
 from pylease.caution import DirtyCaution, ReplacedSetup
-from pylease.ex import VersionRetrievalError
+from pylease.ex import VersionRetrievalError, VersionSpecError
 
 __author__ = 'bagrat'
 
@@ -40,7 +40,11 @@ def main():
         except VersionRetrievalError as ex:
             current_version = ex.version
 
-    release(current_version, level)
+    try:
+        release(current_version, level)
+    except VersionSpecError:
+        print("Error: setup.py must contain one version specification.")
+        exit(1)
 
     with DirtyCaution(current_version):
         __import__('setup')
