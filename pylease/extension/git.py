@@ -3,6 +3,11 @@ from pylease.extension import Extension
 
 
 class GitExtension(Extension):
+    """
+    Git extensions, creates an annotated tag in the git repository named
+    v<version>, where version is the current version being released. Also
+    makes additional commit containing the updated setup.py.
+    """
     _default_release_branch = 'master'
 
     def __init__(self, arg_parser):

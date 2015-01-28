@@ -60,3 +60,5 @@ pylease::
 
     $ pylease --minor --git-tag
 
+After making the release, you will additionally have a new commit
+containing the setup.py update as well as a new tag pointing to that commit.
