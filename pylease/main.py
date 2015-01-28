@@ -1,9 +1,9 @@
 from argparse import ArgumentParser
 import os
 import sys
+
 from pylease.ctxmgmt import ReplacedSetup, DirtyCaution
 from pylease.ex import VersionRetrievalError, VersionSpecError
-
 from pylease.extension import Extension
 from pylease.extension.git import GitExtension
 from pylease.releasemgmt import release
@@ -56,7 +56,3 @@ def main():
         __import__('setup')
 
     Extension.execute_all(extensions, args, new_version)
-
-
-if __name__ == '__main__':
-    main()
