@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 try:
     from pylease import version
-    version('0.1')
+    version('0.1.1')
 except ImportError:
     version = '0.1'
 
