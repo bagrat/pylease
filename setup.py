@@ -1,9 +1,12 @@
 __author__ = 'bagrat'
 
 from setuptools import setup, find_packages
-from pylease import version
 
-version('0.1')
+try:
+    from pylease import version
+    version('0.1')
+except ImportError:
+    version = '0.1'
 
 tests_require = ['nose', 'coverage']
 

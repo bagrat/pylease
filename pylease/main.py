@@ -48,3 +48,7 @@ def main():
 
     with DirtyCaution(current_version):
         __import__('setup')
+
+#
+# if __name__ == '__main__':
+#     main()
