@@ -31,7 +31,7 @@ After having the Version Specification in your setup.py, you are ready for
 making releases with pylease command-line tool, by simply providing the
 release level::
 
-    $ pylease --dev
+    $ pylease dev
 
 This will release the package with version '1.0.dev1', i.e. update the
 version in setup.py and upload it to PyPi. If you need to customize the
@@ -39,6 +39,6 @@ behaviour of setuptools (e.g. by uploading your package to another
 repository), you may pass any other setuptools command-line arguments to
 pylease::
 
-    $ pylease --major -r other_repo
+    $ pylease major -r other_repo
 
 The release levels include ``major, minor, patch and dev``.

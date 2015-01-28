@@ -38,6 +38,8 @@ def release(current, level=default_level, count=1):
 
     update_file(str(current_version))
 
+    return current_version
+
 
 def rollback(previous_version):  # pragma: no cover
     """

@@ -73,19 +73,24 @@ class DirtyCaution(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         """
         Exits the 'with' context by detaching the stdout and stderr
-         listener. Besides, checks for setup status and rolls back package
-         version to current_version in case of failure.
+        listener. Besides, checks for setup status and rolls back package
+        version to current_version in case of failure.
         """
         sys.stdout = self._stdout
         sys.stderr = self._stderr
 
         lines = self.master_io.getvalue().splitlines()
 
-        if not lines[len(lines) - 1]\
+        if lines and not lines[len(lines) - 1]\
                 .startswith(_setuptools_success_msg_prefix):
             rollback(self.current_version)
 
-        return exc_type is None
+            if not exc_type:
+                sys.exit(1)
+
+        if exc_type:
+            print(exc_val.message)
+            sys.exit(1)
 
 
 class ReplacedSetup(object):

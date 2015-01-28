@@ -1,36 +1,42 @@
+from argparse import ArgumentParser
 import os
 import sys
-from pylease.caution import DirtyCaution, ReplacedSetup
+from pylease.ctxmgmt import ReplacedSetup, DirtyCaution
 from pylease.ex import VersionRetrievalError, VersionSpecError
+
+from pylease.extension import Extension
+from pylease.extension.git import GitExtension
+from pylease.releasemgmt import release
 
 __author__ = 'bagrat'
 
-from optparse import OptionParser
-from releasemgmt import default_level, release
-
-_parser = OptionParser(
-    usage="pylease [major | minor | patch | dev] [setuptools_args]")
-
-_parser.add_option('--dev', action="store_const", dest='level',
-                   const='dev', default=default_level)
-_parser.add_option('--patch', action="store_const", dest='level',
-                   const='patch', default=default_level)
-_parser.add_option('--minor', action="store_const", dest='level',
-                   const='minor', default=default_level)
-_parser.add_option('--major', action="store_const", dest='level',
-                   const='major', default=default_level)
-
 
 def main():
-    rest_argv = sys.argv
-    if len(sys.argv) > 1:
-        sys.argv = sys.argv[0:2]
+    parser = ArgumentParser()
 
-    (options, _) = _parser.parse_args()
+    release_group = parser \
+        .add_argument_group(title='release arguments',
+                            description='Specify one of those arguments '
+                                        'to make the corresponding level '
+                                        'release')
 
-    level = options.level
+    level_group = release_group.add_mutually_exclusive_group(required=True)
+    level_group.add_argument('--major', dest='level', action='store_const',
+                             const='major', help='Make a major release')
+    level_group.add_argument('--minor', dest='level', action='store_const',
+                             const='minor', help='Make a minor release')
+    level_group.add_argument('--patch', dest='level', action='store_const',
+                             const='patch', help='Make a patch release')
+    level_group.add_argument('--dev', dest='level', action='store_const',
+                             const='dev', help='Make a dev release')
 
-    sys.argv = ['setup.py', 'sdist', 'upload'] + rest_argv[2:]
+    extensions = Extension.init_all([GitExtension], parser)
+
+    args, setuptools_args = parser.parse_known_args()
+
+    level = args.level
+
+    sys.argv = ['setup.py', 'sdist', 'upload'] + setuptools_args
 
     sys.path = [os.getcwd()] + sys.path
 
@@ -41,14 +47,16 @@ def main():
             current_version = ex.version
 
     try:
-        release(current_version, level)
+        new_version = release(current_version, level)
     except VersionSpecError:
         print("Error: setup.py must contain one version specification.")
-        exit(1)
+        sys.exit(1)
 
     with DirtyCaution(current_version):
         __import__('setup')
 
-#
-# if __name__ == '__main__':
-#     main()
+    Extension.execute_all(extensions, args, new_version)
+
+
+if __name__ == '__main__':
+    main()
