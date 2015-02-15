@@ -3,6 +3,7 @@ This is the dirtiest hack in the world I guess. But this is done for good,
  may be replaced by using legacy setuptools extension methods.
 """
 import setuptools
+from pylease import logme
 
 from pylease.ex import VersionRetrievalError
 
@@ -20,7 +21,8 @@ class Caution(object):
         pass
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type == SystemExit and not (exc_val.code is None or exc_val == 0):
+        if exc_type:
+            logme.error("some error occurred: rolling back...")
             self.rollback_object.rollback()
 
 

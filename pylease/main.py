@@ -1,8 +1,9 @@
-from argparse import ArgumentParser
 import os
+import subprocess
 import sys
-from pylease import logme
+from argparse import ArgumentParser
 
+from pylease import logme
 from pylease.ctxmgmt import ReplacedSetup, Caution
 from pylease.extension import Extension
 from pylease.extension.git import GitExtension
@@ -16,9 +17,8 @@ __author__ = 'bagrat'
 def _init_arg_parser():
     parser = ArgumentParser()
 
-    release_group = parser \
-        .add_argument_group(title='release arguments',
-                            description='Specify one of those arguments to make the corresponding level release')
+    release_group = parser.add_argument_group(title='release arguments',
+                                              description='Specify one of those arguments to make the corresponding level release')
 
     level_group = release_group.add_mutually_exclusive_group(required=True)
     level_group.add_argument('--major', dest='level', action='store_const', const='major', help='Make a major release')
@@ -39,7 +39,6 @@ def main():
     level = args.level
 
     sys.argv = ['setup.py', 'sdist', 'upload'] + setuptools_args
-
     sys.path = [os.getcwd()] + sys.path
 
     logme.info("Working")
@@ -63,3 +62,14 @@ def main():
         __import__('setup')
 
     Extension.execute_all(extensions, args, new_version)
+
+
+class Rollback(VersionRollback):
+    def __init__(self, old_version, new_version):
+        super(Rollback, self).__init__(old_version, new_version)
+
+    def rollback(self):
+        super(Rollback, self).rollback()
+
+        subprocess.call("pip uninstall pylease")
+

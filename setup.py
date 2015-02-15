@@ -6,7 +6,7 @@ version = '0.1'
 
 tests_require = ['nose', 'coverage']
 
-install_requires = []
+install_requires = ['pip']
 
 classifiers = ['License :: OSI Approved :: MIT License',
                'Intended Audience :: Developers',

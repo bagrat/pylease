@@ -8,28 +8,8 @@ requiring as little as possible.
 Basic Usage
 -----------
 
-The only requirement of Pylease is to place a Version Specification in the
-setup.py of your package before calling the setup method. This may be done in
-the following trivial way::
-
-    # setup.py
-
-    from pylease import version
-
-    # and here comes the Version Specification
-    version('1.0')
-
-    ...
-
-    setup(name="myproject", version=version)
-
-
-What? Yes, simply call ``version('1.0')`` and then refer the version as a
-string with the same name.
-
-After having the Version Specification in your setup.py, you are ready for
-making releases with pylease command-line tool, by simply providing the
-release level::
+Start using pylease by just navigating to you package root (the directory containing
+``setup.py``) and simply use the command-line::
 
     $ pylease --dev
 
