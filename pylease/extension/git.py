@@ -4,11 +4,10 @@ from pylease.extension import Extension
 
 class GitExtension(Extension):
     """
-    Git extensions, creates an annotated tag in the git repository named
+    Git extension creates an annotated tag in the git repository named
     v<version>, where version is the current version being released. Also
     makes additional commit containing the updated setup.py.
     """
-    _default_release_branch = 'master'
 
     def __init__(self, arg_parser):
         super(GitExtension, self).__init__(arg_parser)
@@ -27,7 +26,8 @@ class GitExtension(Extension):
         if args.use_git:
             self._make_tag(version)
 
-    def _make_tag(self, version):
+    @classmethod
+    def _make_tag(cls, version):
         call(['git', 'add', 'setup.py'])
         call(['git', 'commit', '-m', 'Prepare release v{version}'.format(
             version=version)])

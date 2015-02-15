@@ -2,11 +2,7 @@ __author__ = 'bagrat'
 
 from setuptools import setup, find_packages
 
-try:
-    from pylease import version
-    version('0.1.1')
-except ImportError:
-    version = '0.1'
+version = '0.1'
 
 tests_require = ['nose', 'coverage']
 
@@ -21,7 +17,6 @@ classifiers = ['License :: OSI Approved :: MIT License',
                'Operating System :: POSIX',
                'Operating System :: POSIX :: Linux',
                'Operating System :: MacOS',
-               'Operating System :: Microsoft :: Windows',
                'Topic :: Software Development :: Libraries :: Python Modules']
 
 config = {

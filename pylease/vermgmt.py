@@ -80,3 +80,13 @@ class DevedVersion(StrictVersion):
         suffix = '.dev{ver}'.format(ver=self.dev) if self.dev > 0 else ''
 
         return '{prefix}{suffix}'.format(prefix=prefix, suffix=suffix)
+
+
+class VersionContainer(object):  # pragma: no cover
+    def __init__(self):
+        super(VersionContainer, self).__init__()
+
+        self.version = None
+
+    def set_version(self, version):
+        self.version = version

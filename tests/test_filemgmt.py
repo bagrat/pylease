@@ -13,7 +13,7 @@ class Test(TestCase):
                                       some line here
                                       and another here
 
-                                      version("{version}")
+                                      version = "{version}"
 
                                       and the last one
                                       """)
@@ -22,52 +22,45 @@ class Test(TestCase):
         new_version = 'n3w.v3rs10n'
 
         old_setup_py = setup_py_tp.format(setup_py_tp, version=old_version)
-        new_setup_py = setup_py_tp.format(setup_py_tp, version=new_version)
+        expected_new_setup_py = setup_py_tp.format(setup_py_tp, version=new_version)
 
-        replaced_setup_py = replace_version(old_setup_py, new_version)
+        actual_new_setup_py, _ = replace_version(old_setup_py, old_version, new_version)
 
-        eq_(replaced_setup_py, new_setup_py,
-            'replace_version() must update the version')
+        eq_(actual_new_setup_py, expected_new_setup_py, 'replace_version() must update the version')
 
     def test_more_than_one_spec(self):
         setup_py_tp = textwrap.dedent("""
                                       some line here
                                       and another here
 
-                                      version("{version}")
+                                      version = "{version}"
 
                                       and the last one
-                                      version("{version}")
+                                      version = "{version}"
                                       """)
 
         old_version = '0ld.v3rs10n'
         new_version = 'n3w.v3rs10n'
 
         old_setup_py = setup_py_tp.format(setup_py_tp, version=old_version)
-        setup_py_tp.format(setup_py_tp, version=new_version)
+        expected_new_setup_py = setup_py_tp.format(setup_py_tp, version=new_version)
+        expected_count = 2
 
-        raises_spec_error = False
-        try:
-            replace_version(old_setup_py, new_version)
-        except VersionSpecError:
-            raises_spec_error = True
+        actual_new_setup_py, actual_count = replace_version(old_setup_py, old_version, new_version)
 
-        ok_(raises_spec_error)
+        eq_(expected_new_setup_py, actual_new_setup_py, "replace_version() must update version")
+        eq_(expected_count, actual_count, "replace_version() must return correct number of occurrences")
 
-    def test_multiple_vspec(self):
-        from pylease import vspec
+    def test_no_version_spec(self):
+        setup_py_tp = textwrap.dedent("""
+                                      some line here
+                                      and another here
 
-        class A:
-            pass
+                                      and the last one
+                                      """)
 
-        vspec.__dict__['A'] = A
+        non_existing_text = "some text that does not appear in setup_py"
 
-        from pylease import filemgmt
+        _, count = replace_version(setup_py_tp, non_existing_text, 'does not matter')
 
-        raises_ver_spec_err = False
-        try:
-            filemgmt._find_version_class_name()
-        except VersionSpecError:
-            raises_ver_spec_err = True
-
-        ok_(raises_ver_spec_err)
+        eq_(count, 0)

@@ -2,11 +2,12 @@ from argparse import ArgumentParser
 import os
 import sys
 
-from pylease.ctxmgmt import ReplacedSetup, DirtyCaution
-from pylease.ex import VersionRetrievalError, VersionSpecError
+from pylease.ctxmgmt import ReplacedSetup, Caution
 from pylease.extension import Extension
 from pylease.extension.git import GitExtension
+from pylease.filemgmt import update_setup_py, VersionRollback
 from pylease.releasemgmt import release
+from pylease.vermgmt import VersionContainer
 
 __author__ = 'bagrat'
 
@@ -40,19 +41,22 @@ def main():
 
     sys.path = [os.getcwd()] + sys.path
 
-    with ReplacedSetup():
-        try:
-            __import__('setup')
-        except VersionRetrievalError as ex:
-            current_version = ex.version
+    vc = VersionContainer()
+    with ReplacedSetup(vc.set_version):
+        __import__('setup')
 
-    try:
-        new_version = release(current_version, level)
-    except VersionSpecError:
-        print("Error: setup.py must contain one version specification.")
+    old_version = vc.version
+    new_version = release(old_version, level)
+
+    count = update_setup_py(old_version, new_version)
+    if count == 0:
+        print("Error: Version specification not found")
         sys.exit(1)
+    elif count > 1:
+        print("Warning: more than one specs")
 
-    with DirtyCaution(current_version):
+    vr = VersionRollback(old_version, new_version)
+    with Caution(vr):
         __import__('setup')
 
     Extension.execute_all(extensions, args, new_version)
