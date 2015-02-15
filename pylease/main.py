@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 import os
 import sys
+from pylease import logme
 
 from pylease.ctxmgmt import ReplacedSetup, Caution
 from pylease.extension import Extension
@@ -12,24 +13,24 @@ from pylease.vermgmt import VersionContainer
 __author__ = 'bagrat'
 
 
-def main():
+def _init_arg_parser():
     parser = ArgumentParser()
 
     release_group = parser \
         .add_argument_group(title='release arguments',
-                            description='Specify one of those arguments '
-                                        'to make the corresponding level '
-                                        'release')
+                            description='Specify one of those arguments to make the corresponding level release')
 
     level_group = release_group.add_mutually_exclusive_group(required=True)
-    level_group.add_argument('--major', dest='level', action='store_const',
-                             const='major', help='Make a major release')
-    level_group.add_argument('--minor', dest='level', action='store_const',
-                             const='minor', help='Make a minor release')
-    level_group.add_argument('--patch', dest='level', action='store_const',
-                             const='patch', help='Make a patch release')
-    level_group.add_argument('--dev', dest='level', action='store_const',
-                             const='dev', help='Make a dev release')
+    level_group.add_argument('--major', dest='level', action='store_const', const='major', help='Make a major release')
+    level_group.add_argument('--minor', dest='level', action='store_const', const='minor', help='Make a minor release')
+    level_group.add_argument('--patch', dest='level', action='store_const', const='patch', help='Make a patch release')
+    level_group.add_argument('--dev', dest='level', action='store_const', const='dev', help='Make a dev release')
+
+    return parser
+
+
+def main():
+    parser = _init_arg_parser()
 
     extensions = Extension.init_all([GitExtension], parser)
 
@@ -41,6 +42,8 @@ def main():
 
     sys.path = [os.getcwd()] + sys.path
 
+    logme.info("Working")
+
     vc = VersionContainer()
     with ReplacedSetup(vc.set_version):
         __import__('setup')
@@ -50,10 +53,10 @@ def main():
 
     count = update_setup_py(old_version, new_version)
     if count == 0:
-        print("Error: Version specification not found")
+        logme.error("Version specification not found!")
         sys.exit(1)
     elif count > 1:
-        print("Warning: more than one specs")
+        logme.warn("more than one version specification found.")
 
     vr = VersionRollback(old_version, new_version)
     with Caution(vr):
