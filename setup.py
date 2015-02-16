@@ -2,7 +2,8 @@ __author__ = 'bagrat'
 
 from setuptools import setup, find_packages
 
-version = '0.1'
+version = '0.2'
+download_url = "https://github.com/n9code/pylease/archive/v{version}.tar.gz".format(version=version)
 
 tests_require = ['nose', 'coverage']
 
@@ -20,17 +21,17 @@ classifiers = ['License :: OSI Approved :: MIT License',
                'Topic :: Software Development :: Libraries :: Python Modules']
 
 config = {
+    'name': 'pylease',
     'description': 'Easy package versioning and release management',
     'author': 'Bagrat Aznauryan',
     'url': 'git@github.com:n9code/pylease.git',
-    'download_url': 'git@github.com:n9code/pylease.git',
+    'download_url': download_url,
     'author_email': 'bagrat@aznauryan.org',
     'version': version,
     'install_requires': install_requires,
     'tests_require': tests_require,
     'classifiers': classifiers,
     'packages': find_packages(),
-    'name': 'pylease',
     'license': 'MIT',
     'keywords': 'release version versioning',
     'entry_points': {
