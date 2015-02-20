@@ -117,8 +117,8 @@ html_sidebars = {
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
-    'github_user': 'bitprophet',
-    'github_repo': 'alabaster',
+    'github_user': 'n9code',
+    'github_repo': 'pylease',
 }
 
 # Add any paths that contain custom themes here, relative to this directory.

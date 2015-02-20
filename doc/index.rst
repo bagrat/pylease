@@ -9,4 +9,9 @@ Pylease Documentation
 .. toctree::
    :maxdepth: 2
 
+   pages/intro
+   pages/tutor
+   pages/ext
+   pages/ref
+
 
