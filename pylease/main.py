@@ -1,5 +1,4 @@
 import os
-import subprocess
 import sys
 from argparse import ArgumentParser
 
@@ -41,8 +40,6 @@ def main():
     sys.argv = ['setup.py', 'sdist', 'upload'] + setuptools_args
     sys.path = [os.getcwd()] + sys.path
 
-    logme.info("Working")
-
     vc = VersionContainer()
     with ReplacedSetup(vc.set_version):
         __import__('setup')
@@ -62,14 +59,3 @@ def main():
         __import__('setup')
 
     Extension.execute_all(extensions, args, new_version)
-
-
-class Rollback(VersionRollback):
-    def __init__(self, old_version, new_version):
-        super(Rollback, self).__init__(old_version, new_version)
-
-    def rollback(self):
-        super(Rollback, self).rollback()
-
-        subprocess.call("pip uninstall pylease")
-

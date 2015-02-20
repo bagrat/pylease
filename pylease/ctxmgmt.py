@@ -1,7 +1,3 @@
-"""
-This is the dirtiest hack in the world I guess. But this is done for good,
- may be replaced by using legacy setuptools extension methods.
-"""
 import setuptools
 from pylease import logme
 

@@ -1,9 +1,8 @@
 Pylease
 =======
 
-Pylease is a simple package that tends to ease the release process of a regular
-Python package. The aim of Pylease is to make it as simple as possible by
-requiring as little as possible.
+Pylease is a simple package that tends to ease the release process of a regular Python package. The aim of Pylease is to make it as
+simple as possible by requiring as little as possible. For more details on using Pylease please see the `documentation <URL>`_.
 
 Basic Usage
 -----------
