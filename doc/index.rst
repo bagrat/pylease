@@ -8,8 +8,7 @@ tasks again and again. These tasks include updating the package version, creatin
 To escape this manual mess, Pylease comes eager to help you out by making those processes as simple as possible by requiring as little as
 possible.
 
-This documentation includes all the information needed to for you to use Pylease, as well as extend it further. See the sections below
-and see Pylease in action.
+This documentation includes all the information needed to for you to use Pylease, as well as extend it further.
 
 .. toctree::
    :maxdepth: 2
