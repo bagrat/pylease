@@ -5,7 +5,7 @@ from pylease.vermgmt import DevedVersion
 __author__ = 'bagrat'
 
 
-class Test(TestCase):
+class TestVersionManagement(TestCase):
     def test_deved_version(self):
         ver = DevedVersion('1.1')
 
