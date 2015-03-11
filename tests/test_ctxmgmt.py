@@ -4,7 +4,7 @@ import sys
 from pylease.ctxmgmt import ReplacedSetup, Caution
 
 
-class Test(TestCase):
+class ContextManagersTest(TestCase):
     def test_replaced_setup(self):
         expected_version = 'expected'
 

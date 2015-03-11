@@ -5,9 +5,9 @@ from setuptools import setup, find_packages
 version = '0.2'
 download_url = "https://github.com/n9code/pylease/archive/v{version}.tar.gz".format(version=version)
 
-tests_require = ['nose', 'coverage']
+tests_require = ['nose', 'coverage', 'spec']
 
-install_requires = ['pip']
+install_requires = []
 
 classifiers = ['License :: OSI Approved :: MIT License',
                'Intended Audience :: Developers',

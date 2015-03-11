@@ -7,7 +7,7 @@ from pylease.filemgmt import replace_version
 __author__ = 'bagrat'
 
 
-class Test(TestCase):
+class FileManagementTest(TestCase):
     def test_replace_version(self):
         setup_py_tp = textwrap.dedent("""
                                       some line here

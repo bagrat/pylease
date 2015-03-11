@@ -19,20 +19,19 @@ def replace_version(setup_py, frm, to):
     return result_setup_py, count
 
 
-def update_setup_py(frm, to):  # pragma: no cover
+def update_files(frm, to, files):  # pragma: no cover
     """
     Update setup.py contents. See replace_version.
     :param to: The new version to be set.
     """
-    filename = 'setup.py'
+    for filename in files:
+        with open(filename, 'r') as setup_py:
+            content = setup_py.read()
 
-    with open(filename, 'r') as setup_py:
-        content = setup_py.read()
+            new_content, count = replace_version(content, frm, to)
 
-        new_content, count = replace_version(content, frm, to)
-
-    with open(filename, 'w') as setup_py:
-        setup_py.write(new_content)
+        with open(filename, 'w') as setup_py:
+            setup_py.write(new_content)
 
     return count
 
@@ -45,4 +44,4 @@ class VersionRollback(object):  # pragma: no cover
         self.new = new_version
 
     def rollback(self):
-        update_setup_py(self.new, self.old)
+        update_files(self.new, self.old)
