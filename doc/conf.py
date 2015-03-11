@@ -119,6 +119,7 @@ html_sidebars = {
 html_theme_options = {
     'github_user': 'n9code',
     'github_repo': 'pylease',
+    'logo': 'logo.png'
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
