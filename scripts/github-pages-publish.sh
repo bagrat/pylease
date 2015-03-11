@@ -3,6 +3,7 @@ STATUS=`git status -s`
 [ ${#STATUS} -ne 0 ] && echo "Changes need to be commited" && exit 1
 
 cd doc
+make clean
 make html
 cd ..
 
@@ -12,7 +13,7 @@ cp -r doc/_build/html $TEMPDIR/html
 
 git checkout gh-pages
 git reset HEAD~1
-mv $TEMPDIR/html/* ./
+rsync -a $TEMPDIR/html/* ./
 touch .nojekyll
 
 git add .
