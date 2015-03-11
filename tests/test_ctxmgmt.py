@@ -24,7 +24,6 @@ class ContextManagersTest(TestCase):
         def exiting_method():
             sys.exit(exit_code)
 
-
         obj = self.Dummy()  # Just an object that has __dict__
         attr = "someattr"
         val = "someval"

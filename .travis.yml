@@ -6,6 +6,8 @@ install:
   - "pip install -r req.txt"
   - "pip install -r req-test.txt"
 script:
+  - "flake8 pylease"
+  - "flake8 tests"
   - "nosetests"
 
 branches:

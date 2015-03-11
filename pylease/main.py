@@ -23,7 +23,7 @@ def _init_arg_parser():
     version_group.add_argument('--version', dest='ver_req', action='store_const', const=True, help='Get Pylease version')
 
     release_group = root_group.add_argument_group(title='release arguments',
-                                              description='Specify one of those arguments to make the corresponding level release')
+                                                  description='Specify one of those arguments to make the corresponding level release')
 
     level_group = release_group.add_mutually_exclusive_group(required=False)
     level_group.add_argument('--major', dest='level', action='store_const', const='major', help='Make a major release')

@@ -1,7 +1,6 @@
 import textwrap
 from unittest import TestCase
-from nose.tools import ok_, eq_
-from pylease.ex import VersionSpecError
+from nose.tools import eq_
 from pylease.filemgmt import replace_version
 
 __author__ = 'bagrat'
