@@ -1,0 +1,3 @@
+[console_scripts]
+pylease = pylease.main:main
+

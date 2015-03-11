@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: pylease
+Version: 0.2
+Summary: Easy package versioning and release management
+Home-page: git@github.com:n9code/pylease.git
+Author: Bagrat Aznauryan
+Author-email: bagrat@aznauryan.org
+License: MIT
+Download-URL: https://github.com/n9code/pylease/archive/v0.2.tar.gz
+Description: UNKNOWN
+Keywords: release version versioning
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
