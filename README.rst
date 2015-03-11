@@ -1,10 +1,3 @@
-.. image:: http://n9code.github.io/pylease/_static/logo.png
-   :height: 20pt
-   :width: 20pt
-   :scale: 10%
-   :align: right
-   :alt: Pylease Logo
-
 Pylease
 =======
 
