@@ -3,8 +3,8 @@ python:
   - "2.7"
   - "2.6"
 install:
-  - "python setup.py install"
-  - "python setup.py test"
+  - "pip install -r req.txt"
+  - "pip install -r req-test.txt"
 script:
   - "nosetests"
 
