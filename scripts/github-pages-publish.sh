@@ -1,6 +1,10 @@
-STATUS=`git status -s`
+BRANCH="$1"
+[ -z $BRANCH ] && echo "Should specify a branch name" && exit 1
 
+STATUS=`git status -s`
 [ ${#STATUS} -ne 0 ] && echo "Changes need to be commited" && exit 1
+
+git checkout $BRANCH
 
 cd doc
 make clean
@@ -20,4 +24,4 @@ git add .
 git commit -m "Autoupdate"
 git push -f origin gh-pages
 
-git checkout dev
+git checkout $BRANCH
