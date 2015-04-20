@@ -14,6 +14,10 @@ Pylease
     :target: https://coveralls.io/r/n9code/pylease?branch=dev
     :alt: Code Coverage
 
+.. image:: https://img.shields.io/badge/license-MIT-blue.svg
+    :target: https://raw.githubusercontent.com/n9code/pylease/dev/LICENSE
+    :alt: License
+
 Pylease is a simple package that tends to ease the release process of a regular Python package. The aim of Pylease is to make it as
 simple as possible by requiring as little as possible. For more details on using Pylease please see the `documentation <http://n9code
 .github.io/pylease/>`_.
