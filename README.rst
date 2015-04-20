@@ -9,6 +9,11 @@ Pylease
     :target: https://landscape.io/github/n9code/pylease/dev
     :alt: Code Health
 
+
+.. image:: https://coveralls.io/repos/n9code/pylease/badge.svg
+    :target: https://coveralls.io/r/n9code/pylease
+    :alt: Code Coverage
+
 Pylease is a simple package that tends to ease the release process of a regular Python package. The aim of Pylease is to make it as
 simple as possible by requiring as little as possible. For more details on using Pylease please see the `documentation <http://n9code
 .github.io/pylease/>`_.
