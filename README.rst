@@ -10,8 +10,8 @@ Pylease
     :alt: Code Health
 
 
-.. image:: https://coveralls.io/repos/n9code/pylease/badge.svg
-    :target: https://coveralls.io/r/n9code/pylease
+.. image:: https://coveralls.io/repos/n9code/pylease/badge.svg?branch=dev
+    :target: https://coveralls.io/r/n9code/pylease?branch=dev
     :alt: Code Coverage
 
 Pylease is a simple package that tends to ease the release process of a regular Python package. The aim of Pylease is to make it as
