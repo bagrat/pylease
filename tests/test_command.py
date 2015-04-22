@@ -100,4 +100,3 @@ class CommandTest(TestCase):
 
         lizy = Pylease(None, None, None, None)
         Command.init_all(lizy)
-        

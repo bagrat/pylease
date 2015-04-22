@@ -10,7 +10,6 @@ from pylease.extension.git import GitExtension
 from pylease.filemgmt import update_files, VersionRollback
 from pylease.releasemgmt import release
 from pylease.vermgmt import InfoContainer
-from tests import MockSetupPy
 
 __author__ = 'bagrat'
 
@@ -25,8 +24,8 @@ def _init_arg_parser():
     release_parser = sub_parsers.add_parser('make', help='Retrieve current status of the project')
 
     release_group = release_parser.add_argument_group(title='release arguments',
-                                              description='Specify one of those arguments to make the '
-                                                          'corresponding level release')
+                                                      description='Specify one of those arguments to make the '
+                                                      'corresponding level release')
 
     level_group = release_group.add_mutually_exclusive_group(required=False)
     level_group.add_argument('--major', dest='level', action='store_const', const='major', help='Make a major release')
@@ -46,7 +45,7 @@ def main():
 
     parser = _init_arg_parser()
 
-    lizy = pylease.Pylease(parser, ic.name, ic.version)
+    # lizy = pylease.Pylease(parser, ic.name, ic.version)
 
     extensions = Extension.init_all([GitExtension], parser)
 
@@ -54,7 +53,7 @@ def main():
 
     print(args)
 
-    # level = args.level
+    level = args.level
 
     sys.argv = ['setup.py', 'sdist', 'upload'] + setuptools_args
 
@@ -86,5 +85,3 @@ def version_info():
     version = pylease.__version__
 
     return version_str.format(version=version)
-
-main()
