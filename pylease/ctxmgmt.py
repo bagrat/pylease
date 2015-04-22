@@ -46,6 +46,6 @@ class ReplacedSetup(object):
         """
         The replacement method for setup method.
         """
-        self.callback(kwargs.get('version'))
+        self.callback(**kwargs)
 
         raise VersionRetrievalError

@@ -1,39 +1,44 @@
 __author__ = 'bagrat'
 
 
-def replace_version(setup_py, frm, to):
+def replace_version(content, frm, to):
     """
     Replaces the value of the version specification value in the contents of
     ``setup_py`` from ``frm`` to ``to``.
-    :param setup_py: The string containing version specification
+    :param content: The string containing version specification
     :param to: The new version to be set
     :return: (result_content, count of occurrences)
     """
     frm_str = str(frm)
     to_str = str(to)
 
-    count = setup_py.count(frm_str)
+    count = content.count(frm_str)
 
-    result_setup_py = setup_py.replace(frm_str, to_str, count)
+    result_setup_py = content.replace(frm_str, to_str, count)
 
     return result_setup_py, count
 
 
-def update_files(frm, to, files):  # pragma: no cover
+def update_files(frm, to, files=None):  # pragma: no cover
     """
     Update setup.py contents. See replace_version.
     :param to: The new version to be set.
     """
+    counts = {}
+    if not files:
+        files = ['setup.py']
     for filename in files:
         with open(filename, 'r') as setup_py:
             content = setup_py.read()
 
             new_content, count = replace_version(content, frm, to)
 
+            counts[filename] = count
+
         with open(filename, 'w') as setup_py:
             setup_py.write(new_content)
 
-    return count
+    return counts
 
 
 class VersionRollback(object):  # pragma: no cover

@@ -3,3 +3,4 @@ coverage
 spec
 flake8
 coveralls
+mock

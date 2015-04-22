@@ -9,7 +9,8 @@ from pylease.extension import Extension
 from pylease.extension.git import GitExtension
 from pylease.filemgmt import update_files, VersionRollback
 from pylease.releasemgmt import release
-from pylease.vermgmt import VersionContainer
+from pylease.vermgmt import InfoContainer
+from tests import MockSetupPy
 
 __author__ = 'bagrat'
 
@@ -17,13 +18,15 @@ __author__ = 'bagrat'
 def _init_arg_parser():
     parser = ArgumentParser()
 
-    root_group = parser.add_mutually_exclusive_group(required=False)
+    parser.add_argument('--version', action='version', version=version_info())
 
-    version_group = root_group.add_argument_group(title='other arguments', description='aaa')
-    version_group.add_argument('--version', dest='ver_req', action='store_const', const=True, help='Get Pylease version')
+    sub_parsers = parser.add_subparsers(help='Pylease commands', dest='command')
 
-    release_group = root_group.add_argument_group(title='release arguments',
-                                                  description='Specify one of those arguments to make the corresponding level release')
+    release_parser = sub_parsers.add_parser('make', help='Retrieve current status of the project')
+
+    release_group = release_parser.add_argument_group(title='release arguments',
+                                              description='Specify one of those arguments to make the '
+                                                          'corresponding level release')
 
     level_group = release_group.add_mutually_exclusive_group(required=False)
     level_group.add_argument('--major', dest='level', action='store_const', const='major', help='Make a major release')
@@ -35,34 +38,41 @@ def _init_arg_parser():
 
 
 def main():
+    sys.path = [os.getcwd()] + sys.path
+    ic = InfoContainer()
+    with ReplacedSetup(ic.set_info):
+        __import__('setup')
+    old_version = ic.version
+
     parser = _init_arg_parser()
+
+    lizy = pylease.Pylease(parser, ic.name, ic.version)
 
     extensions = Extension.init_all([GitExtension], parser)
 
     args, setuptools_args = parser.parse_known_args()
 
-    if args.ver_req:
-        print(version_info())
-        return 0
+    print(args)
 
-    level = args.level
+    # level = args.level
 
     sys.argv = ['setup.py', 'sdist', 'upload'] + setuptools_args
-    sys.path = [os.getcwd()] + sys.path
 
-    vc = VersionContainer()
-    with ReplacedSetup(vc.set_version):
+    ic = InfoContainer()
+    with ReplacedSetup(ic.set_info):
         __import__('setup')
 
-    old_version = vc.version
     new_version = release(old_version, level)
 
-    count = update_files(old_version, new_version)
-    if count == 0:
+    counts = update_files(old_version, new_version)
+    if len(counts) == 0:
         logme.error("Version specification not found!")
         return 1
-    elif count > 1:
+    elif len(counts) > 1:
         logme.warn("More than one version specification found.")
+        logme.debug("Occurrences:")
+        for filename in counts:
+            logme.debug("\t{filename}: {count}".format(filename=filename, count=counts[filename]))
 
     vr = VersionRollback(old_version, new_version)
     with Caution(vr):
@@ -76,3 +86,5 @@ def version_info():
     version = pylease.__version__
 
     return version_str.format(version=version)
+
+main()

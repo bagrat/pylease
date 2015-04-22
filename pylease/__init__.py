@@ -13,3 +13,17 @@ handler.setLevel(logging.ERROR)
 handler.setFormatter(logging.Formatter(fmt=_LOGGING_FMT))
 
 logme.addHandler(handler)
+
+
+class Pylease(object):
+    def __init__(self, parser, subparser, name, version):
+        super(Pylease, self).__init__()
+
+        self.parser = parser
+        self.subparser = subparser
+        self.version = version
+        self.name = name
+        self.commands = {}
+
+    def add_command(self, name, command):
+        self.commands[name] = command

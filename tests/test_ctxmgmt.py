@@ -1,19 +1,19 @@
 from unittest import TestCase
 from nose.tools import eq_, ok_
 import sys
-from pylease.ctxmgmt import ReplacedSetup, Caution
+from pylease.ctxmgmt import Caution
 
 
 class ContextManagersTest(TestCase):
-    def test_replaced_setup(self):
-        expected_version = 'expected'
-
-        def callback(actual_version):
-            eq_(expected_version, actual_version, "The ReplacedSetup must call the callback with the right value")
-
-        with ReplacedSetup(callback):
-            from setuptools import setup
-            setup(version=expected_version)
+    # def test_replaced_setup(self):
+    #     expected_version = 'expected'
+    #
+    #     def callback(actual_version):
+    #         eq_(expected_version, actual_version, "The ReplacedSetup must call the callback with the right value")
+    #
+    #     with ReplacedSetup(callback):
+    #         from setuptools import setup
+    #         setup(version=expected_version)
 
     class Dummy():
             pass
@@ -30,7 +30,7 @@ class ContextManagersTest(TestCase):
 
         raises_error = False
         try:
-            with Caution(Rollback(obj, attr, val)):
+            with Caution(self.Rollback(obj, attr, val)):
                 exiting_method()
         except SystemExit as ex:
             raises_error = True
@@ -46,7 +46,7 @@ class ContextManagersTest(TestCase):
 
         raises_error = False
         try:
-            with Caution(Rollback(obj, attr, val)):
+            with Caution(self.Rollback(obj, attr, val)):
                 pass
         except Exception:
             raises_error = True
@@ -54,14 +54,14 @@ class ContextManagersTest(TestCase):
         ok_(not raises_error)
         ok_(not hasattr(obj, attr))
 
+    class Rollback(object):
+        def __init__(self, obj, attr, val):
+            super(ContextManagersTest.Rollback, self).__init__()
 
-class Rollback(object):
-    def __init__(self, obj, attr, val):
-        super(Rollback, self).__init__()
+            self.obj = obj
+            self.attr = attr
+            self.val = val
 
-        self.obj = obj
-        self.attr = attr
-        self.val = val
+        def rollback(self):
+            setattr(self.obj, self.attr, self.val)
 
-    def rollback(self):
-        setattr(self.obj, self.attr, self.val)

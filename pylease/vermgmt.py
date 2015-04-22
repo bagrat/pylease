@@ -82,11 +82,13 @@ class DevedVersion(StrictVersion):
         return '{prefix}{suffix}'.format(prefix=prefix, suffix=suffix)
 
 
-class VersionContainer(object):  # pragma: no cover
+class InfoContainer(object):  # pragma: no cover
     def __init__(self):
-        super(VersionContainer, self).__init__()
+        super(InfoContainer, self).__init__()
 
+        self.name = None
         self.version = None
 
-    def set_version(self, version):
-        self.version = version
+    def set_info(self, **kwargs):
+        self.name = kwargs.get('name')
+        self.version = kwargs.get('version')
