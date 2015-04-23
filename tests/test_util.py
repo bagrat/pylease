@@ -1,6 +1,6 @@
 from unittest import TestCase
 from nose.tools import ok_, eq_
-from pylease.util import SubclassIgnoreMark, get_caller_module, ignore_subclass, IgnoreSubclass
+from pylease.util import get_caller_module, ignore_subclass, IgnoreSubclass
 
 
 class UtilitiesTest(TestCase):
@@ -24,6 +24,7 @@ class UtilitiesTest(TestCase):
         ok_(not hasattr(Z, IgnoreSubclass.DEFAULT_MARK_NAME))
 
         ignore_mark_name = 'ignore_mark'
+
         @IgnoreSubclass(ignore_mark_name)
         class A2(Z):
             pass

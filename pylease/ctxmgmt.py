@@ -1,8 +1,6 @@
 import setuptools
 from pylease import logme
 
-from pylease.ex import VersionRetrievalError
-
 
 class Caution(object):
     """
@@ -30,7 +28,7 @@ class ReplacedSetup(object):
     def __init__(self, callback):
         super(ReplacedSetup, self).__init__()
 
-        self.callback = callback
+        self._callback = callback
 
     def __enter__(self):
         self._old_setup = setuptools.setup
@@ -39,13 +37,8 @@ class ReplacedSetup(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         setuptools.setup = self._old_setup
 
-        if exc_type == VersionRetrievalError:
-            return True
-
     def _version_reporter(self, **kwargs):
         """
         The replacement method for setup method.
         """
-        self.callback(**kwargs)
-
-        raise VersionRetrievalError
+        self._callback(**kwargs)

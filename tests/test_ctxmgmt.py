@@ -1,19 +1,34 @@
-from unittest import TestCase
+import textwrap
+from mock import Mock
 from nose.tools import eq_, ok_
 import sys
-from pylease.ctxmgmt import Caution
+
+from pylease.ctxmgmt import Caution, ReplacedSetup
+from tests import PyleaseTest, MockedSetupPy
 
 
-class ContextManagersTest(TestCase):
-    # def test_replaced_setup(self):
-    #     expected_version = 'expected'
-    #
-    #     def callback(actual_version):
-    #         eq_(expected_version, actual_version, "The ReplacedSetup must call the callback with the right value")
-    #
-    #     with ReplacedSetup(callback):
-    #         from setuptools import setup
-    #         setup(version=expected_version)
+class ContextManagersTest(PyleaseTest):
+    def test_replaced_setup(self):
+        key1 = 'key1'
+        val1 = 'val1'
+        key2 = 'key2'
+        val2 = 'val2'
+
+        kwargs = {key1: val1, key2: val2}
+        setup_py = textwrap.dedent("""
+                                   from setuptools import setup
+
+                                   kwargs = {{'{}': '{key1}', '{}': '{key2}'}}
+                                   setup(**kwargs)
+                                   """. format(key1, key2, **kwargs))
+
+        callback = Mock()
+
+        with ReplacedSetup(callback):
+            with MockedSetupPy(setup_py, self):
+                __import__('setup')
+
+            callback.assert_called_once_with(**kwargs)
 
     class Dummy():
             pass

@@ -13,9 +13,5 @@ class ReleaseError(PyleaseError):
     pass
 
 
-class VersionRetrievalError(PyleaseError):
-    pass
-
-
 class UploadError(PyleaseError):
     pass
