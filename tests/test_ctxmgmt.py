@@ -64,4 +64,3 @@ class ContextManagersTest(TestCase):
 
         def rollback(self):
             setattr(self.obj, self.attr, self.val)
-

@@ -1,6 +1,3 @@
-from unittest import TestCase
-import sys
-
 __author__ = 'bagrat'
 
 import mock

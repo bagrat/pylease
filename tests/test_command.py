@@ -1,6 +1,6 @@
 from unittest import TestCase
 from mock import patch
-from nose.tools import *
+from nose.tools import ok_, eq_
 from pylease import Pylease
 from pylease.util import SubclassIgnoreMark
 from pylease.command import Command, NamedCommand
