@@ -1,6 +1,6 @@
 from unittest import TestCase
 from nose.tools import ok_, eq_
-from pylease.util import SubclassIgnoreMark, get_caller_module
+from pylease.util import SubclassIgnoreMark, get_caller_module, ignore_subclass, IgnoreSubclass
 
 
 class UtilitiesTest(TestCase):
@@ -8,19 +8,36 @@ class UtilitiesTest(TestCase):
         class Z(object):
             pass
 
-        class A(Z):
-            ignore = SubclassIgnoreMark('A')
-
-        class B(A):
+        @ignore_subclass
+        class A1(Z):
             pass
 
-        class C(B):
+        class B1(A1):
             pass
 
-        ok_(A.ignore)
-        ok_(not B.ignore)
-        ok_(not C.ignore)
-        ok_(not hasattr(Z, 'ignore'))
+        class C1(B1):
+            pass
+
+        ok_(A1.ignore)
+        ok_(not B1.ignore)
+        ok_(not C1.ignore)
+        ok_(not hasattr(Z, IgnoreSubclass.DEFAULT_MARK_NAME))
+
+        ignore_mark_name = 'ignore_mark'
+        @IgnoreSubclass(ignore_mark_name)
+        class A2(Z):
+            pass
+
+        class B2(A2):
+            pass
+
+        class C2(B2):
+            pass
+
+        ok_(getattr(A2, ignore_mark_name))
+        ok_(not getattr(B2, ignore_mark_name))
+        ok_(not getattr(C2, ignore_mark_name))
+        ok_(not hasattr(Z, ignore_mark_name))
 
     def test_get_caller_module_must_return_the_module_from_which_the_method_was_called(self):
         module = get_caller_module()
