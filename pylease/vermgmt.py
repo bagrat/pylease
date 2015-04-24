@@ -27,6 +27,8 @@ class DevedVersion(StrictVersion):
                 self.dev = 0
             vstring = match.group(1)
 
+        self.version = None
+
         StrictVersion.__init__(self, vstring)
 
     def _increase_version(self, count=1, index=0):
@@ -40,7 +42,7 @@ class DevedVersion(StrictVersion):
 
         new_version = []
 
-        for i, comp in enumerate(old_version):
+        for i, _ in enumerate(old_version):
             if i == index:
                 new_version.append(new_comp)
             elif i > index:

@@ -1,6 +1,5 @@
 import textwrap
-from unittest import TestCase
-from nose.tools import eq_, ok_
+from nose.tools import eq_
 from pylease.filemgmt import replace_version, update_files
 from tests import PyleaseTest, MockedFile, MockedSetupPy
 
@@ -86,7 +85,7 @@ class FileManagementTest(PyleaseTest):
 
             eq_(expected_contents, new_contents)
 
-        with MockedSetupPy(old_contents, self) as setup_py:
+        with MockedSetupPy(old_contents, self):
             update_files(old_version, new_version)
 
             new_contents = mocked_file.contents()
