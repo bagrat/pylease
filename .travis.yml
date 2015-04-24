@@ -1,7 +1,6 @@
 language: python
 python:
   - "2.7"
-  - "2.6"
 install:
   - "pip install -r req.txt"
   - "pip install -r req-test.txt"
