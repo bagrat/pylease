@@ -1,12 +1,13 @@
 import textwrap
 from unittest import TestCase
-from nose.tools import eq_
-from pylease.filemgmt import replace_version
+from nose.tools import eq_, ok_
+from pylease.filemgmt import replace_version, update_files
+from tests import PyleaseTest, MockedFile, MockedSetupPy
 
 __author__ = 'bagrat'
 
 
-class FileManagementTest(TestCase):
+class FileManagementTest(PyleaseTest):
     def test_replace_version(self):
         setup_py_tp = textwrap.dedent("""
                                       some line here
@@ -63,3 +64,31 @@ class FileManagementTest(TestCase):
         _, count = replace_version(setup_py_tp, non_existing_text, 'does not matter')
 
         eq_(count, 0)
+
+    def test_update_files(self):
+        old_version = 'old_version'
+        new_version = 'new_version'
+
+        file_contents = textwrap.dedent("""
+                        line one
+                        version = {}
+                        """)
+
+        old_contents = file_contents.format(old_version)
+        expected_contents = file_contents.format(new_version)
+
+        filename = 'some_file'
+
+        with MockedFile(filename, old_contents, self) as mocked_file:
+            update_files(old_version, new_version, [filename])
+
+            new_contents = mocked_file.contents()
+
+            eq_(expected_contents, new_contents)
+
+        with MockedSetupPy(old_contents, self) as setup_py:
+            update_files(old_version, new_version)
+
+            new_contents = mocked_file.contents()
+
+            eq_(expected_contents, new_contents)

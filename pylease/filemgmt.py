@@ -7,7 +7,7 @@ def replace_version(content, frm, to):
     ``setup_py`` from ``frm`` to ``to``.
     :param content: The string containing version specification
     :param to: The new version to be set
-    :return: (result_content, count of occurrences)
+    :return: (result_content, number of occurrences)
     """
     frm_str = str(frm)
     to_str = str(to)
@@ -19,7 +19,7 @@ def replace_version(content, frm, to):
     return result_setup_py, count
 
 
-def update_files(frm, to, files=None):  # pragma: no cover
+def update_files(frm, to, files=None):
     """
     Update setup.py contents. See replace_version.
     :param to: The new version to be set.

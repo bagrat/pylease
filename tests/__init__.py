@@ -1,6 +1,7 @@
 import sys
 from unittest import TestCase
 import shutil
+import __builtin__
 
 __author__ = 'bagrat'
 
@@ -34,38 +35,75 @@ class PyleaseTest(TestCase):
         shutil.rmtree(cls.MOCK_SUBDIR)
 
 
-class MockedSetupPy(object):
-    def __init__(self, content, test=None, mock_path=None):
-        super(MockedSetupPy, self).__init__()
+class MockedFile(object):
+    def __init__(self, filename, content, test=None, mock_path=None):
+        super(MockedFile, self).__init__()
 
         if not mock_path:
             if not test:
-                raise TestError("While mocking setup.py without a mock path, you have to provide the test class.")
+                raise TestError("While mocking file without a mock path, you have to provide the test class.")
             if not isinstance(test, type):
                 test = test.__class__
             if not issubclass(test, PyleaseTest):
-                raise TestError("While mocking setup.py you have provided '{}' as test class which is not a subclass of PyleaseTest, "
+                raise TestError("While mocking a file you have provided '{}' as test class which is not a subclass of PyleaseTest, "
                                 "though it is supposed to be.". format(test.__name__))
 
             mock_path_attr_name = 'mock_path'
             if not hasattr(test, mock_path_attr_name):
-                raise TestError("While mocking setup.py you have provided '{}' as test class which does not have '{}' attribute"
+                raise TestError("While mocking file you have provided '{}' as test class which does not have '{}' attribute"
                                 "though it is supposed to have.". format(test.__name__, mock_path_attr_name))
 
             mock_path = getattr(test, mock_path_attr_name)
 
         self._mock_path = mock_path
         self._content = content
+        self._filename = filename
+        self.mock_file_path = os.path.join(self._mock_path, self._filename)
 
     def __enter__(self):
+        with open(self.mock_file_path, 'w') as file_mock:
+            file_mock.write(self._content)
+
+        self._orig_open = getattr(__builtin__, 'open')
+        __builtin__.open = self._open_mock()
+
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        __builtin__.open = self._orig_open
+
+    def contents(self):
+        with open(self.mock_file_path, 'r') as f:
+            return f.read()
+
+    def _open_mock(self):
+        mocked_abs_file = os.path.abspath(self._filename)
+
+        def open_mock(filename, *args, **kwargs):
+            provided_abs_file = os.path.abspath(filename)
+
+            if mocked_abs_file == provided_abs_file:
+                return self._orig_open(self.mock_file_path, *args, **kwargs)
+            return self._orig_open(filename, *args, **kwargs)
+
+        return open_mock
+
+
+class MockedSetupPy(MockedFile):
+    FILENAME = 'setup.py'
+
+    def __init__(self, content, test=None, mock_path=None):
+        super(MockedSetupPy, self).__init__(self.FILENAME, content, test, mock_path)
+
+    def __enter__(self):
+        super(MockedSetupPy, self).__enter__()
+
         self._orig = os.getcwd
         os.getcwd = mock.Mock(return_value=self._mock_path)
 
         sys.path = [os.getcwd()] + sys.path
 
-        setup_py_file = os.path.join(self._mock_path, 'setup.py')
-        with open(setup_py_file, 'w') as setup_py_mock:
-            setup_py_mock.write(self._content)
-
     def __exit__(self, exc_type, exc_val, exc_tb):
+        super(MockedSetupPy, self).__exit__(exc_type, exc_val, exc_tb)
+
         os.getcwd = self._orig
