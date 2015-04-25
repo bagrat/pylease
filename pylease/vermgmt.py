@@ -92,5 +92,5 @@ class InfoContainer(object):  # pragma: no cover
         self.version = None
 
     def set_info(self, **kwargs):
-        self.name = kwargs.get('name')
-        self.version = kwargs.get('version')
+        for key in kwargs:
+            setattr(self, key, kwargs[key])

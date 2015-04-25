@@ -41,12 +41,13 @@ def update_files(frm, to, files=None):
     return counts
 
 
-class VersionRollback(object):  # pragma: no cover
-    def __init__(self, old_version, new_version):
+class VersionRollback(object):
+    def __init__(self, old_version, new_version, files=None):
         super(VersionRollback, self).__init__()
 
-        self.old = old_version
-        self.new = new_version
+        self._old = old_version
+        self._new = new_version
+        self._files = files
 
     def rollback(self):
-        update_files(self.new, self.old)
+        update_files(self._new, self._old, self._files)

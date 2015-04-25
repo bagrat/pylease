@@ -6,8 +6,8 @@ from pylease.ex import ReleaseError
 __author__ = 'bagrat'
 
 
-class TestReleaseMgmt(TestCase):
-    def test_release(self):
+class TestReleaseManagement(TestCase):
+    def test_release_must_update_the_version_object_depending_on_the_level_provided(self):
         raises_error = False
         try:
             releasemgmt.release('1.0', 'unknown')

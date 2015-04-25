@@ -1,12 +1,12 @@
 from unittest import TestCase
 from nose.tools import eq_, ok_
-from pylease.vermgmt import DevedVersion
+from pylease.vermgmt import DevedVersion, InfoContainer
 
 __author__ = 'bagrat'
 
 
 class TestVersionManagement(TestCase):
-    def test_deved_version(self):
+    def test_deved_version_must_increase_corresponding_version_level_depending_on_method_called(self):
         ver = DevedVersion('1.1')
 
         eq_(ver.version, (1, 1, 0))
@@ -36,3 +36,13 @@ class TestVersionManagement(TestCase):
             raises_value_error = True
 
         ok_(raises_value_error)
+
+    def test_info_container_set_info_method_must_set_the_objects_attributes_to_the_values_from_the_dictionary(self):
+        ic = InfoContainer()
+
+        info = {'key1': 'val1', 'key2': 'val2'}
+
+        ic.set_info(**info)
+
+        for key in info:
+            eq_(getattr(ic, key), info[key])

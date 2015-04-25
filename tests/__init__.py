@@ -92,18 +92,24 @@ class MockedFile(object):
 class MockedSetupPy(MockedFile):
     FILENAME = 'setup.py'
 
-    def __init__(self, content, test=None, mock_path=None):
+    def __init__(self, content, test=None, mock_path=None, for_import=True):
         super(MockedSetupPy, self).__init__(self.FILENAME, content, test, mock_path)
+
+        self._for_import = for_import
 
     def __enter__(self):
         super(MockedSetupPy, self).__enter__()
 
-        self._orig = os.getcwd
-        os.getcwd = mock.Mock(return_value=self._mock_path)
+        if self._for_import:
+            self._orig = os.getcwd
+            os.getcwd = mock.Mock(return_value=self._mock_path)
 
-        sys.path = [os.getcwd()] + sys.path
+            sys.path = [os.getcwd()] + sys.path
+
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         super(MockedSetupPy, self).__exit__(exc_type, exc_val, exc_tb)
 
-        os.getcwd = self._orig
+        if self._for_import:
+            os.getcwd = self._orig

@@ -8,7 +8,7 @@ from tests import PyleaseTest, MockedSetupPy
 
 
 class ContextManagersTest(PyleaseTest):
-    def test_replaced_setup(self):
+    def test_replaced_setup_must_replace_the_setuptools_setup_with_provided_callback(self):
         key1 = 'key1'
         val1 = 'val1'
         key2 = 'key2'
@@ -33,7 +33,7 @@ class ContextManagersTest(PyleaseTest):
     class Dummy():
             pass
 
-    def test_caution(self):
+    def test_caution_context_manager_must_rollback_everything_if_error_occurs(self):
         exit_code = 123
 
         def exiting_method():
@@ -54,7 +54,7 @@ class ContextManagersTest(PyleaseTest):
         ok_(raises_error)
         eq_(getattr(obj, attr), val)
 
-    def test_caution_no_exit(self):
+    def test_caution_context_manager_should_leave_everythin_as_is_if_no_error_occurs(self):
         obj = self.Dummy()
         attr = "someattr"
         val = "someval"
