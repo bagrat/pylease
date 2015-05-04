@@ -1,4 +1,6 @@
+from cStringIO import StringIO
 import sys
+import textwrap
 from unittest import TestCase
 import shutil
 import __builtin__
@@ -93,6 +95,9 @@ class MockedSetupPy(MockedFile):
     FILENAME = 'setup.py'
 
     def __init__(self, content, test=None, mock_path=None, for_import=True):
+        if for_import:
+            content = textwrap.dedent(content)
+
         super(MockedSetupPy, self).__init__(self.FILENAME, content, test, mock_path)
 
         self._for_import = for_import
@@ -106,6 +111,9 @@ class MockedSetupPy(MockedFile):
 
             sys.path = [os.getcwd()] + sys.path
 
+            if 'setup' in sys.modules:
+                del sys.modules['setup']
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -113,3 +121,16 @@ class MockedSetupPy(MockedFile):
 
         if self._for_import:
             os.getcwd = self._orig
+
+
+class CapturedStdout(object):
+    def __enter__(self):
+        self._stdout = sys.stdout
+        sys.stdout = self._stringio = StringIO()
+
+        return self
+
+    def __exit__(self, *args):
+        self.output = self._stringio.getvalue()
+
+        sys.stdout = self._stdout

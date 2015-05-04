@@ -1,4 +1,3 @@
-import textwrap
 from mock import Mock
 from nose.tools import eq_, ok_
 import sys
@@ -15,12 +14,12 @@ class ContextManagersTest(PyleaseTest):
         val2 = 'val2'
 
         kwargs = {key1: val1, key2: val2}
-        setup_py = textwrap.dedent("""
-                                   from setuptools import setup
+        setup_py = """
+                   from setuptools import setup
 
-                                   kwargs = {{'{}': '{key1}', '{}': '{key2}'}}
-                                   setup(**kwargs)
-                                   """. format(key1, key2, **kwargs))
+                   kwargs = {{'{}': '{key1}', '{}': '{key2}'}}
+                   setup(**kwargs)
+                   """. format(key1, key2, **kwargs)
 
         callback = Mock()
 

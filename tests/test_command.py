@@ -1,5 +1,5 @@
 from unittest import TestCase
-from mock import patch
+from mock import patch, MagicMock, call
 from nose.tools import ok_, eq_
 from pylease import Pylease
 from pylease.util import SubclassIgnoreMark
@@ -12,7 +12,7 @@ class CommandTest(TestCase):
 
         class C0(Command):
             def __init__(self, dummy):
-                super(C0, self).__init__(dummy)
+                super(C0, self).__init__(dummy, 'C0', 'C0 description')
 
                 inited.append(self.__class__)
 
@@ -38,30 +38,28 @@ class CommandTest(TestCase):
         ok_(C2 in inited)
 
     def test_named_command_class_should_set_command_name_if_not_defined(self):
+        description = 'some description'
+
         class SomeCommand(NamedCommand):
-            def _process_command(self, lizy, args):
-                pass
-
-        class SomeCommandWithDefinedName(NamedCommand):
-            THE_NAME = 'the name'
-
-            def _get_name(self):
-                return self.THE_NAME
+            def __init__(self, lizy):
+                super(SomeCommand, self).__init__(lizy, description)
 
             def _process_command(self, lizy, args):
                 pass
 
-        with patch.object(Command, '__init__') as init_mock:
-            init_mock.return_value = None
+        subparser_mock = lambda: 0
+        subparser_mock.add_parser = MagicMock()
 
-            no_name = SomeCommand(None)
-            with_name = SomeCommandWithDefinedName(None)
+        no_name = SomeCommand(Pylease(None, subparser_mock, None))
 
         eq_(no_name.name, 'some')
-        eq_(with_name.name, SomeCommandWithDefinedName.THE_NAME)
+        subparser_mock.add_parser.assert_called_once_with('some', help=description)
 
     def test_calling_command_instance_should_fire_process_command_method(self):
         class C(Command):
+            def __init__(self, lizy):
+                super(C, self).__init__(lizy, 'C', 'C description')
+
             def _process_command(self, lizy, args):
                 pass
 
@@ -80,23 +78,44 @@ class CommandTest(TestCase):
 
     def test_init_all_should_add_all_commands_to_lizy(self):
         class Base(NamedCommand):
+            def __init__(self, lizy, description):
+                super(Base, self).__init__(lizy, description)
+
             ignore_me = SubclassIgnoreMark('Base')
 
             def _process_command(self, lizy, args):
                 pass
 
         class A(Command):
+            NAME = 'A'
+            DESC = 'A desc'
+
+            def __init__(self, lizy):
+                super(A, self).__init__(lizy, self.NAME, self.DESC)
+
             def _process_command(self, lizy, args):
                 pass
 
-            def _get_name(self):
-                return 'A'
-
         class BCommand(Base):
-            pass
+            NAME = 'B'
+            DESC = 'B desc'
+
+            def __init__(self, lizy):
+                super(BCommand, self).__init__(lizy, self.DESC)
 
         class CCommand(Base):
-            pass
+            NAME = 'C'
+            DESC = 'C desc'
 
-        lizy = Pylease(None, None, None, None)
+            def __init__(self, lizy):
+                super(CCommand, self).__init__(lizy, self.DESC)
+
+        subparser_mock = lambda: 0
+        subparser_mock.add_parser = MagicMock()
+
+        lizy = Pylease(None, subparser_mock, None)
         Command.init_all(lizy)
+
+        calls = [call(A.NAME, help=A.DESC), call(BCommand.NAME.lower(), help=BCommand.DESC),
+                 call(CCommand.NAME.lower(), help=CCommand.DESC)]
+        subparser_mock.add_parser.assert_has_calls(calls, any_order=True)

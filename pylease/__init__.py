@@ -16,14 +16,19 @@ logme.addHandler(handler)
 
 
 class Pylease(object):
-    def __init__(self, parser, subparser, name, version):
+    def __init__(self, parser, cmd_subparsers, info_container):
         super(Pylease, self).__init__()
 
         self.parser = parser
-        self.subparser = subparser
-        self.version = version
-        self.name = name
+        self.cmd_subparsers = cmd_subparsers
+        self.info_container = info_container
         self.commands = {}
 
     def add_command(self, name, command):
         self.commands[name] = command
+
+    def execute_command(self, name, args):
+        self.commands[name](args)
+
+    def add_subparser(self, *args, **kwargs):
+        self.cmd_subparsers.add_parser(*args, **kwargs)

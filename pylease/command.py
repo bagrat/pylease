@@ -8,24 +8,19 @@ class Command(object):
     _IGNORE_ME_VAR_NAME = 'ignore_me'
     ignore_me = False
 
-    def __init__(self, lizy):
+    def __init__(self, lizy, name, description):
         super(Command, self).__init__()
 
-        lizy.add_command(self.name, self)
-
+        self.name = name
+        self.description = description
+        self.parser = lizy.add_subparser(self.name, help=self.description)
         self._lizy = lizy
+
+        lizy.add_command(self.name, self)
 
     @abstractmethod
     def _process_command(self, lizy, args):
         pass  # pragma: no cover
-
-    @abstractmethod
-    def _get_name(self):
-        pass  # pragma: no cover
-
-    @property
-    def name(self):
-        return self._get_name()
 
     def __call__(self, args):
         self._process_command(self._lizy, args)
@@ -44,24 +39,18 @@ class NamedCommand(Command):
     _SUFFIX = "Command"
     ignore_me = SubclassIgnoreMark('NamedCommand')
 
-    def __init__(self, lizy):
+    def __init__(self, lizy, description):
         my_name = self.__class__.__name__
-        self._name = my_name[:-(len(self._SUFFIX))].lower()
+        name = my_name[:-(len(self._SUFFIX))].lower()
 
-        super(NamedCommand, self).__init__(lizy)
-
-    def _get_name(self):
-        return self._name
+        super(NamedCommand, self).__init__(lizy, name, description)
 
 
-# class StatusCommand(Command):
-#     def __init__(self, lizy):
-#         super(StatusCommand, self).__init__(lizy)
-#
-#         status_parser = lizy.subparser.add_parser('status', help='Retrieve current status of the project')
-#
-#     def _name(self):
-#         return "status"
-#
-#     def _process_command(self, lizy, args):
-#         print(lizy.name + " " + lizy.version)
+class StatusCommand(NamedCommand):
+    OUTPUT_FMT = 'Project Name: {name}\nCurrent Version: {version}'
+
+    def __init__(self, lizy):
+        super(StatusCommand, self).__init__(lizy, 'Retrieve current status of the project')
+
+    def _process_command(self, lizy, args):
+        print(self.OUTPUT_FMT.format(name=lizy.info_container.name, version=lizy.info_container.version))

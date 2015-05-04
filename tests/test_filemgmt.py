@@ -1,4 +1,3 @@
-import textwrap
 from nose.tools import eq_
 from pylease.filemgmt import replace_version, update_files, VersionRollback
 from tests import PyleaseTest, MockedFile, MockedSetupPy
@@ -8,14 +7,14 @@ __author__ = 'bagrat'
 
 class FileManagementTest(PyleaseTest):
     def test_replace_version_must_replace_a_version_specification_in_the_provided_string(self):
-        setup_py_tp = textwrap.dedent("""
-                                      some line here
-                                      and another here
+        setup_py_tp = """
+                      some line here
+                      and another here
 
-                                      version = "{version}"
+                      version = "{version}"
 
-                                      and the last one
-                                      """)
+                      and the last one
+                      """
 
         old_version = '0ld.v3rs10n'
         new_version = 'n3w.v3rs10n'
@@ -28,15 +27,15 @@ class FileManagementTest(PyleaseTest):
         eq_(actual_new_setup_py, expected_new_setup_py, 'replace_version() must update the version')
 
     def test_replace_version_must_return_the_number_of_occurrences_of_version_specifications(self):
-        setup_py_tp = textwrap.dedent("""
-                                      some line here
-                                      and another here
+        setup_py_tp = """
+                      some line here
+                      and another here
 
-                                      version = "{version}"
+                      version = "{version}"
 
-                                      and the last one
-                                      version = "{version}"
-                                      """)
+                      and the last one
+                      version = "{version}"
+                      """
 
         old_version = '0ld.v3rs10n'
         new_version = 'n3w.v3rs10n'
@@ -51,12 +50,12 @@ class FileManagementTest(PyleaseTest):
         eq_(expected_count, actual_count, "replace_version() must return correct number of occurrences")
 
     def test_Replace_version_must_return_zero_occurrences_if_no_version_specification_found(self):
-        setup_py_tp = textwrap.dedent("""
-                                      some line here
-                                      and another here
+        setup_py_tp = """
+                      some line here
+                      and another here
 
-                                      and the last one
-                                      """)
+                      and the last one
+                      """
 
         non_existing_text = "some text that does not appear in setup_py"
 
@@ -68,10 +67,10 @@ class FileManagementTest(PyleaseTest):
         old_version = 'old_version'
         new_version = 'new_version'
 
-        file_contents = textwrap.dedent("""
+        file_contents = """
                         line one
                         version = {}
-                        """)
+                        """
 
         old_contents = file_contents.format(old_version)
         expected_contents = file_contents.format(new_version)
@@ -96,10 +95,10 @@ class FileManagementTest(PyleaseTest):
         old_version = 'old_version'
         new_version = 'new_version'
 
-        file_contents = textwrap.dedent("""
+        file_contents = """
                         line one
                         version = {}
-                        """)
+                        """
 
         old_contents = file_contents.format(old_version)
         expected_contents = file_contents.format(new_version)
@@ -115,10 +114,10 @@ class FileManagementTest(PyleaseTest):
         old_version = 'old_version'
         new_version = 'new_version'
 
-        file_contents = textwrap.dedent("""
+        file_contents = """
                         line one
                         version = {}
-                        """)
+                        """
 
         current_contents = file_contents.format(new_version)
         expected_contents = file_contents.format(old_version)
