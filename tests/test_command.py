@@ -28,10 +28,9 @@ class CommandTest(TestCase):
         class C2(C1):
             pass
 
-        with patch.object(Command, '__init__') as init_mock:
-            init_mock.return_value = None
-
-            Command.init_all(None)
+        cmd_subparser = MagicMock()
+        cmd_subparser.add_parser = MagicMock()
+        Command.init_all(Pylease(None, cmd_subparser, None))
 
         ok_(C0 in inited)
         ok_(C1 not in inited)

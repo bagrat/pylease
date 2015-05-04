@@ -18,23 +18,21 @@ class TestError(Exception):
 class PyleaseTest(TestCase):
     MOCK_SUBDIR = os.path.join('tests', 'mock')
 
-    @classmethod
-    def setUpClass(cls):
-        super(PyleaseTest, cls).setUpClass()
+    def setUp(self):
+        super(PyleaseTest, self).setUpClass()
 
         cwd = os.getcwd()
-        cls.mock_path = os.path.join(cwd, cls.MOCK_SUBDIR)
+        self.mock_path = os.path.join(cwd, self.MOCK_SUBDIR)
 
-        if os.path.exists(cls.mock_path):
-            shutil.rmtree(cls.MOCK_SUBDIR)
+        if os.path.exists(self.mock_path):
+            shutil.rmtree(self.MOCK_SUBDIR)
 
-        os.makedirs(cls.mock_path)
+        os.makedirs(self.mock_path)
 
-    @classmethod
-    def tearDownClass(cls):
-        super(PyleaseTest, cls).tearDownClass()
+    def tearDown(self):
+        super(PyleaseTest, self).tearDownClass()
 
-        shutil.rmtree(cls.MOCK_SUBDIR)
+        shutil.rmtree(self.MOCK_SUBDIR)
 
 
 class MockedFile(object):
@@ -44,15 +42,13 @@ class MockedFile(object):
         if not mock_path:
             if not test:
                 raise TestError("While mocking file without a mock path, you have to provide the test class.")
-            if not isinstance(test, type):
-                test = test.__class__
-            if not issubclass(test, PyleaseTest):
+            if not issubclass(test.__class__, PyleaseTest):
                 raise TestError("While mocking a file you have provided '{}' as test class which is not a subclass of PyleaseTest, "
                                 "though it is supposed to be.". format(test.__name__))
 
             mock_path_attr_name = 'mock_path'
             if not hasattr(test, mock_path_attr_name):
-                raise TestError("While mocking file you have provided '{}' as test class which does not have '{}' attribute"
+                raise TestError("While mocking file you have provided '{}' as test class which does not have '{}' attribute, "
                                 "though it is supposed to have.". format(test.__name__, mock_path_attr_name))
 
             mock_path = getattr(test, mock_path_attr_name)
@@ -75,7 +71,7 @@ class MockedFile(object):
         __builtin__.open = self._orig_open
 
     def contents(self):
-        with open(self.mock_file_path, 'r') as f:
+        with self._orig_open(self.mock_file_path, 'r') as f:
             return f.read()
 
     def _open_mock(self):

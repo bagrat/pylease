@@ -31,4 +31,4 @@ class Pylease(object):
         self.commands[name](args)
 
     def add_subparser(self, *args, **kwargs):
-        self.cmd_subparsers.add_parser(*args, **kwargs)
+        return self.cmd_subparsers.add_parser(*args, **kwargs)

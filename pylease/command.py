@@ -1,4 +1,7 @@
 from abc import ABCMeta, abstractmethod
+from pylease import logme
+from pylease.filemgmt import update_files
+from pylease.releasemgmt import release
 from pylease.util import SubclassIgnoreMark
 
 
@@ -54,3 +57,34 @@ class StatusCommand(NamedCommand):
 
     def _process_command(self, lizy, args):
         print(self.OUTPUT_FMT.format(name=lizy.info_container.name, version=lizy.info_container.version))
+
+
+class MakeCommand(NamedCommand):
+    def __init__(self, lizy):
+        super(MakeCommand, self).__init__(lizy, 'Make a release')
+
+        release_group = self.parser.add_argument_group(title='release arguments',
+                                                       description='Specify one of those arguments to make the '
+                                                       'corresponding level release')
+
+        level_group = release_group.add_mutually_exclusive_group(required=True)
+        level_group.add_argument('--major', dest='level', action='store_const', const='major', help='Make a major release')
+        level_group.add_argument('--minor', dest='level', action='store_const', const='minor', help='Make a minor release')
+        level_group.add_argument('--patch', dest='level', action='store_const', const='patch', help='Make a patch release')
+        level_group.add_argument('--dev', dest='level', action='store_const', const='dev', help='Make a dev release')
+
+    def _process_command(self, lizy, args):
+        old_version = lizy.info_container.version
+        level = args.level
+
+        new_version = release(old_version, level)
+
+        counts = update_files(old_version, new_version)
+        if len(counts) == 0:
+            logme.error("Version specification not found!")
+            return 1
+        elif len(counts) > 1:
+            logme.warn("More than one version specification found.")
+            logme.debug("Occurrences:")
+            for filename in counts:
+                logme.debug("\t{filename}: {count}".format(filename=filename, count=counts[filename]))

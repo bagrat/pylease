@@ -20,3 +20,16 @@ class CommandLineTest(PyleaseTest):
                 main(['status'])
 
         eq_(StatusCommand.OUTPUT_FMT.format(name=name, version=version) + '\n', stdout.output)
+
+    def test_make_release_must_update_the_version_correspondingly(self):
+        version = '0.1'
+        setup_py_contents = """
+                   from setuptools import setup
+
+                   setup(version='{version}')
+                   """
+
+        with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
+            main(['make', '--dev'])
+
+        print(setup_py.contents())
