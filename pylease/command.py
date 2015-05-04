@@ -26,7 +26,7 @@ class Command(object):
         pass  # pragma: no cover
 
     def __call__(self, args):
-        self._process_command(self._lizy, args)
+        return self._process_command(self._lizy, args)
 
     @classmethod
     def init_all(cls, lizy):
@@ -75,15 +75,22 @@ class MakeCommand(NamedCommand):
 
     def _process_command(self, lizy, args):
         old_version = lizy.info_container.version
+
+        if old_version is None:
+            logme.error("Version specification not found!")
+            return 1
+
         level = args.level
 
         new_version = release(old_version, level)
 
         counts = update_files(old_version, new_version)
-        if len(counts) == 0:
-            logme.error("Version specification not found!")
-            return 1
-        elif len(counts) > 1:
+
+        count = 0
+        for version_file in counts:
+            count += counts[version_file]
+
+        if count > 1:
             logme.warn("More than one version specification found.")
             logme.debug("Occurrences:")
             for filename in counts:

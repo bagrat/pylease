@@ -28,7 +28,7 @@ class Pylease(object):
         self.commands[name] = command
 
     def execute_command(self, name, args):
-        self.commands[name](args)
+        return self.commands[name](args)
 
     def add_subparser(self, *args, **kwargs):
         return self.cmd_subparsers.add_parser(*args, **kwargs)

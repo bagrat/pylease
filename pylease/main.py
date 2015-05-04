@@ -30,7 +30,7 @@ def main(args=None):
 
     command_name = args.command
 
-    lizy.execute_command(command_name, args)
+    return lizy.execute_command(command_name, args)
 
     #
     #

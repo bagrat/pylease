@@ -1,4 +1,7 @@
-from nose.tools import eq_
+import textwrap
+from mock import MagicMock
+from nose.tools import eq_, ok_
+import pylease
 from pylease.command import StatusCommand
 from pylease.main import main
 from tests import PyleaseTest, MockedSetupPy, CapturedStdout
@@ -22,14 +25,51 @@ class CommandLineTest(PyleaseTest):
         eq_(StatusCommand.OUTPUT_FMT.format(name=name, version=version) + '\n', stdout.output)
 
     def test_make_release_must_update_the_version_correspondingly(self):
-        version = '0.1'
-        setup_py_contents = """
-                   from setuptools import setup
+        version = '0.12'
+        setup_py_contents = textwrap.dedent("""
+                                            from setuptools import setup
 
-                   setup(version='{version}')
-                   """
+                                            setup(version='{version}')
+                                            """)
 
         with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
             main(['make', '--dev'])
+            expected_version = '0.12.dev1'
+            eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
 
-        print(setup_py.contents())
+        with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
+            main(['make', '--patch'])
+            expected_version = '0.12.1'
+            eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
+
+        with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
+            main(['make', '--minor'])
+            expected_version = '0.13'
+            eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
+
+        with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
+            main(['make', '--major'])
+            expected_version = '1.0'
+            eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
+
+    def test_make_command_must_return_error_when_no_version_spec_is_found(self):
+        setup_py_contents = textwrap.dedent("""
+                                            from setuptools import setup
+
+                                            setup()
+                                            """)
+        with MockedSetupPy(setup_py_contents, self) as setup_py:
+            eq_(main(['make', '--major']), 1)
+
+    def test_make_command_must_warn_wwhen_more_than_one_version_specs_are_found(self):
+        pylease.logme.warn = MagicMock()
+
+        setup_py_contents = textwrap.dedent("""
+                                            from setuptools import setup
+                                            version='1.0'
+                                            setup(version='1.0')
+                                            """)
+        with MockedSetupPy(setup_py_contents, self) as setup_py:
+            main(['make', '--major'])
+
+        ok_(pylease.logme.warn.called)

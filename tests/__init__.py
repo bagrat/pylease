@@ -36,7 +36,7 @@ class PyleaseTest(TestCase):
 
 
 class MockedFile(object):
-    def __init__(self, filename, content, test=None, mock_path=None):
+    def __init__(self, filename, content, test=None, mock_path=None, for_import=False):
         super(MockedFile, self).__init__()
 
         if not mock_path:
@@ -57,6 +57,7 @@ class MockedFile(object):
         self._content = content
         self._filename = filename
         self.mock_file_path = os.path.join(self._mock_path, self._filename)
+        self._for_import = for_import
 
     def __enter__(self):
         with open(self.mock_file_path, 'w') as file_mock:
@@ -65,10 +66,22 @@ class MockedFile(object):
         self._orig_open = getattr(__builtin__, 'open')
         __builtin__.open = self._open_mock()
 
+        if self._for_import:
+            self._orig_getcwd = os.getcwd
+            os.getcwd = mock.Mock(return_value=self._mock_path)
+
+            sys.path = [os.getcwd()] + sys.path
+
+            if 'setup' in sys.modules:
+                del sys.modules['setup']
+
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         __builtin__.open = self._orig_open
+
+        if self._for_import:
+            os.getcwd = self._orig_getcwd
 
     def contents(self):
         with self._orig_open(self.mock_file_path, 'r') as f:
@@ -78,7 +91,11 @@ class MockedFile(object):
         mocked_abs_file = os.path.abspath(self._filename)
 
         def open_mock(filename, *args, **kwargs):
+            if self._for_import:
+                os.getcwd = self._orig_getcwd
             provided_abs_file = os.path.abspath(filename)
+            if self._for_import:
+                os.getcwd = mock.Mock(return_value=self._mock_path)
 
             if mocked_abs_file == provided_abs_file:
                 return self._orig_open(self.mock_file_path, *args, **kwargs)
@@ -94,29 +111,7 @@ class MockedSetupPy(MockedFile):
         if for_import:
             content = textwrap.dedent(content)
 
-        super(MockedSetupPy, self).__init__(self.FILENAME, content, test, mock_path)
-
-        self._for_import = for_import
-
-    def __enter__(self):
-        super(MockedSetupPy, self).__enter__()
-
-        if self._for_import:
-            self._orig = os.getcwd
-            os.getcwd = mock.Mock(return_value=self._mock_path)
-
-            sys.path = [os.getcwd()] + sys.path
-
-            if 'setup' in sys.modules:
-                del sys.modules['setup']
-
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        super(MockedSetupPy, self).__exit__(exc_type, exc_val, exc_tb)
-
-        if self._for_import:
-            os.getcwd = self._orig
+        super(MockedSetupPy, self).__init__(self.FILENAME, content, test, mock_path, for_import)
 
 
 class CapturedStdout(object):
