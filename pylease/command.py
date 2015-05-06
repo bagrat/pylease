@@ -13,7 +13,7 @@ class Command(object):
     _IGNORE_ME_VAR_NAME = 'ignore_me'
     ignore_me = False
 
-    def __init__(self, lizy, name, description):
+    def __init__(self, lizy, name, description, rollback=None):
         super(Command, self).__init__()
 
         self.name = name
@@ -23,6 +23,7 @@ class Command(object):
         self.before_tasks = set()
         self.after_tasks = set()
         self.result = None
+        self.rollback = rollback
 
         lizy.add_command(self.name, self)
 
@@ -36,8 +37,8 @@ class Command(object):
                 rollback = task(self._lizy, args)
                 caution.add_rollback(rollback)
 
-            rollback, result = self._process_command(self._lizy, args)
-            caution.add_rollback(rollback)
+            result = self._process_command(self._lizy, args)
+            caution.add_rollback(self.rollback)
 
             self.result = result
 
@@ -68,16 +69,22 @@ class Command(object):
 class BeforeTask(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self):
+    def __init__(self, rollback=None):
         super(BeforeTask, self).__init__()
 
         self._command = None
+        self._rollback = rollback
 
     def set_command(self, command):
         self._command = command
 
     def __call__(self, lizy, args):
-        return self.execute(lizy, args)
+        try:
+            self.execute(lizy, args)
+            return self._rollback
+        except Exception as ex:
+            setattr(ex, 'rollback', self._rollback)
+            raise ex
 
     @abstractmethod
     def execute(self, lizy, args):
@@ -86,9 +93,6 @@ class BeforeTask(object):
 
 class AfterTask(BeforeTask):
     __metaclass__ = ABCMeta
-
-    def __init__(self):
-        super(AfterTask, self).__init__()
 
     @property
     def _command_result(self):
@@ -99,11 +103,11 @@ class NamedCommand(Command):
     _SUFFIX = "Command"
     ignore_me = SubclassIgnoreMark('NamedCommand')
 
-    def __init__(self, lizy, description):
+    def __init__(self, lizy, description, rollback=None):
         my_name = self.__class__.__name__
         name = my_name[:-(len(self._SUFFIX))].lower()
 
-        super(NamedCommand, self).__init__(lizy, name, description)
+        super(NamedCommand, self).__init__(lizy, name, description, rollback)
 
 
 class StatusCommand(NamedCommand):
@@ -118,7 +122,7 @@ class StatusCommand(NamedCommand):
     def _process_command(self, lizy, args):
         print(self.OUTPUT_FMT.format(name=lizy.info_container.name, version=lizy.info_container.version))
 
-        return None, {self.KEY_NAME: lizy.info_container.name, self.KEY_VERSION: lizy.info_container.version}
+        return {self.KEY_NAME: lizy.info_container.name, self.KEY_VERSION: lizy.info_container.version}
 
 
 class MakeCommand(NamedCommand):
@@ -163,4 +167,4 @@ class MakeCommand(NamedCommand):
             for filename in counts:
                 logme.debug("\t{filename}: {count}".format(filename=filename, count=counts[filename]))
 
-        return None, {self.KEY_OLD_VERSION: str(old_version), self.KEY_NEW_VERSION: str(new_version), self.KEY_LEVEL: str(level)}
+        return {self.KEY_OLD_VERSION: str(old_version), self.KEY_NEW_VERSION: str(new_version), self.KEY_LEVEL: str(level)}

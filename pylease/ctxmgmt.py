@@ -6,14 +6,18 @@ class Caution(object):
     """
     Context manager for handling rollback process in case of setup failure
     """
+
+    EXCEPTION_ROLLBACK_ATTR_NAME = 'rollback'
+
     def __init__(self):
         super(Caution, self).__init__()
 
-        self._rollbacks = []
+        self._rollbacks = set()
         self.result = 0
 
     def add_rollback(self, rollback):
-        self._rollbacks.append(rollback)
+        if rollback:
+            self._rollbacks.add(rollback)
 
     def __enter__(self):
         return self
@@ -21,6 +25,10 @@ class Caution(object):
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type:
             logme.error("Some error occurred: rolling back...\n{}".format(exc_val.message))
+
+            if hasattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME):
+                rollback = getattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME)
+                rollback()
 
             for rollback in self._rollbacks:
                 rollback()

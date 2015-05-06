@@ -169,19 +169,26 @@ class CommandTest(TestCase):
     def test_all_actions_must_be_rolled_back_on_failure(self):
         before_rollback = MagicMock()
         command_rollback = MagicMock()
+        after_rollback = MagicMock()
 
         class RollbackTestCommand(NamedCommand):
             def __init__(self, lizy):
-                super(RollbackTestCommand, self).__init__(lizy, 'rollback desc')
+                super(RollbackTestCommand, self).__init__(lizy, 'rollback desc', command_rollback)
 
             def _process_command(self, lizy, args):
-                return command_rollback, None
+                return None
 
         class B(BeforeTask):
+            def __init__(self):
+                super(B, self).__init__(before_rollback)
+
             def execute(self, lizy, args):
-                return before_rollback
+                pass
 
         class A(AfterTask):
+            def __init__(self):
+                super(A, self).__init__(after_rollback)
+
             def execute(self, lizy, args):
                 raise PyleaseError()
 
@@ -198,3 +205,4 @@ class CommandTest(TestCase):
 
         before_rollback.assert_called_once_with()
         command_rollback.assert_called_once_with()
+        after_rollback.assert_called_once_with()

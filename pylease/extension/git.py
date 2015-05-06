@@ -22,7 +22,7 @@ class GitExtension(Extension):
                                default=False,
                                help='Create a version tag on git')
 
-        make_command.add_after_task(GitAfterTask())
+        make_command.add_after_task(GitAfterTask(None))
 
 
 class GitAfterTask(AfterTask):
