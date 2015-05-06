@@ -1,6 +1,7 @@
 from unittest import TestCase
 from mock import patch, MagicMock, call
 from nose.tools import ok_, eq_
+from pylease.ex import PyleaseError
 from pylease import Pylease
 from pylease.util import SubclassIgnoreMark
 from pylease.command import Command, NamedCommand
@@ -44,7 +45,7 @@ class CommandTest(TestCase):
                 super(SomeCommand, self).__init__(lizy, description)
 
             def _process_command(self, lizy, args):
-                pass
+                return None, None
 
         subparser_mock = lambda: 0
         subparser_mock.add_parser = MagicMock()
@@ -60,11 +61,10 @@ class CommandTest(TestCase):
                 super(C, self).__init__(lizy, 'C', 'C description')
 
             def _process_command(self, lizy, args):
-                pass
+                return None, None
 
-        # with patch.object(Command, '__init__') as init_mock:
         with patch.object(C, '_process_command') as process_command:
-            # init_mock.return_value = None
+            process_command.return_value = None, None
 
             subparser_mock = lambda: 0
             subparser_mock.add_parser = MagicMock()
@@ -124,7 +124,7 @@ class CommandTest(TestCase):
                 super(SuccessCommand, self).__init__(lizy, 'desc')
 
             def _process_command(self, lizy, args):
-                return 0
+                return None, None
 
         before = MagicMock()
         after = MagicMock()
@@ -148,7 +148,7 @@ class CommandTest(TestCase):
                 super(FailureCommand, self).__init__(lizy, 'desc')
 
             def _process_command(self, lizy, args):
-                return 1
+                raise PyleaseError()
 
         before = MagicMock()
         after = MagicMock()

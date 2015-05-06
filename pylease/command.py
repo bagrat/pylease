@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from pylease import logme
+from pylease.ex import PyleaseError
 from pylease.filemgmt import update_files
 from pylease.releasemgmt import release
 from pylease.util import SubclassIgnoreMark
@@ -20,6 +21,7 @@ class Command(object):
         self._lizy = lizy
         self.before_tasks = set()
         self.after_tasks = set()
+        self.result = None
 
         lizy.add_command(self.name, self)
 
@@ -31,11 +33,12 @@ class Command(object):
         for task in self.before_tasks:
             task(self._lizy, args)
 
-        result = self._process_command(self._lizy, args)
+        rollback, result = self._process_command(self._lizy, args)
 
-        if result is None or result == 0:
-            for task in self.after_tasks:
-                task(self._lizy, args)
+        self.result = result
+
+        for task in self.after_tasks:
+            task(self._lizy, args)
 
         return result
 
@@ -50,9 +53,41 @@ class Command(object):
 
     def add_before_task(self, task):
         self.before_tasks.add(task)
+        task.set_command(self)
 
     def add_after_task(self, task):
         self.after_tasks.add(task)
+        task.set_command(self)
+
+
+class BeforeTask(object):
+    __metaclass__ = ABCMeta
+
+    def __init__(self):
+        super(BeforeTask, self).__init__()
+
+        self._command = None
+
+    def set_command(self, command):
+        self._command = command
+
+    def __call__(self, lizy, args):
+        self.execute(lizy, args)
+
+    @abstractmethod
+    def execute(self, lizy, args):
+        pass
+
+
+class AfterTask(BeforeTask):
+    __metaclass__ = ABCMeta
+
+    def __init__(self):
+        super(AfterTask, self).__init__()
+
+    @property
+    def _command_result(self):
+        return self._command.result
 
 
 class NamedCommand(Command):
@@ -69,14 +104,23 @@ class NamedCommand(Command):
 class StatusCommand(NamedCommand):
     OUTPUT_FMT = 'Project Name: {name}\nCurrent Version: {version}'
 
+    KEY_VERSION = 'version'
+    KEY_NAME = 'name'
+
     def __init__(self, lizy):
         super(StatusCommand, self).__init__(lizy, 'Retrieve current status of the project')
 
     def _process_command(self, lizy, args):
         print(self.OUTPUT_FMT.format(name=lizy.info_container.name, version=lizy.info_container.version))
 
+        return None, {self.KEY_NAME: lizy.info_container.name, self.KEY_VERSION: lizy.info_container.version}
+
 
 class MakeCommand(NamedCommand):
+    KEY_OLD_VERSION = 'old_version'
+    KEY_NEW_VERSION = 'new_version'
+    KEY_LEVEL = 'level'
+
     def __init__(self, lizy):
         super(MakeCommand, self).__init__(lizy, 'Make a release')
 
@@ -94,8 +138,9 @@ class MakeCommand(NamedCommand):
         old_version = lizy.info_container.version
 
         if old_version is None:
-            logme.error("Version specification not found!")
-            return 1
+            error_msg = "Version specification not found!"
+            logme.error(error_msg)
+            raise PyleaseError(error_msg)
 
         level = args.level
 
@@ -112,3 +157,5 @@ class MakeCommand(NamedCommand):
             logme.debug("Occurrences:")
             for filename in counts:
                 logme.debug("\t{filename}: {count}".format(filename=filename, count=counts[filename]))
+
+        return None, {self.KEY_OLD_VERSION: str(old_version), self.KEY_NEW_VERSION: str(new_version), self.KEY_LEVEL: str(level)}

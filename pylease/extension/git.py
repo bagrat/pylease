@@ -1,4 +1,5 @@
 from subprocess import call
+from pylease.command import AfterTask
 from pylease.extension import Extension
 
 
@@ -9,10 +10,11 @@ class GitExtension(Extension):
     makes additional commit containing the updated setup.py.
     """
 
-    def __init__(self, arg_parser):
-        super(GitExtension, self).__init__(arg_parser)
+    def load(self):
+        make_command = self._lizy.commands['make']
+        parser = make_command.parser
 
-        git_group = arg_parser.add_argument_group(title='git arguments')
+        git_group = parser.add_argument_group(title='git arguments')
 
         git_group.add_argument('--git-tag',
                                action='store_true',
@@ -20,15 +22,14 @@ class GitExtension(Extension):
                                default=False,
                                help='Create a version tag on git')
 
-    def execute(self, args, version):
-        super(GitExtension, self).execute(args, version)
+        make_command.add_after_task(GitAfterTask())
 
+
+class GitAfterTask(AfterTask):
+    def execute(self, lizy, args):
         if args.use_git:
-            self._make_tag(version)
-
-    @classmethod
-    def _make_tag(cls, version):
-        call(['git', 'add', 'setup.py'])
-        call(['git', 'commit', '-m', 'Prepare release v{version}'.format(
-            version=version)])
-        call(['git', 'tag', '-a', 'v{version}'.format(version=version)])
+            version = self._command_result[self._command.KEY_NEW_VERSION]
+            call(['git', 'add', 'setup.py'])
+            call(['git', 'commit', '-m', 'Prepare release v{version}'.format(
+                version=version)])
+            call(['git', 'tag', '-a', 'v{version}'.format(version=version)])

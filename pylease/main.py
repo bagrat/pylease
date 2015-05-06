@@ -1,6 +1,7 @@
 import os
 import sys
 from argparse import ArgumentParser
+from pylease.extension import Extension
 
 import pylease
 from pylease.command import Command
@@ -25,6 +26,7 @@ def main(args=None):
     lizy = pylease.Pylease(parser, sub_parsers, ic)
 
     Command.init_all(lizy)
+    Extension.init_all(lizy)
 
     args = parser.parse_args(args)
 

@@ -59,7 +59,7 @@ class CommandLineTest(PyleaseTest):
                                             setup()
                                             """)
         with MockedSetupPy(setup_py_contents, self):
-            eq_(main(['make', '--major']), 1)
+            self.assertRaises(pylease.ex.PyleaseError, main, ['make', '--major'])
 
     def test_make_command_must_warn_wwhen_more_than_one_version_specs_are_found(self):
         pylease.logme.warn = MagicMock()
@@ -73,3 +73,11 @@ class CommandLineTest(PyleaseTest):
             main(['make', '--major'])
 
         ok_(pylease.logme.warn.called)
+
+    # def test_git(self):
+    #     setup_py_contents = textwrap.dedent("""
+    #                                         from setuptools import setup
+    #                                         setup(version='1.0')
+    #                                         """)
+    #     with MockedSetupPy(setup_py_contents, self):
+    #         main(['make', '--major', '--git-tag'])
