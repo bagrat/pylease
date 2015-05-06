@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from pylease import logme
+from pylease.ctxmgmt import Caution
 from pylease.ex import PyleaseError
 from pylease.filemgmt import update_files
 from pylease.releasemgmt import release
@@ -30,17 +31,21 @@ class Command(object):
         pass  # pragma: no cover
 
     def __call__(self, args):
-        for task in self.before_tasks:
-            task(self._lizy, args)
+        with Caution() as caution:
+            for task in self.before_tasks:
+                rollback = task(self._lizy, args)
+                caution.add_rollback(rollback)
 
-        rollback, result = self._process_command(self._lizy, args)
+            rollback, result = self._process_command(self._lizy, args)
+            caution.add_rollback(rollback)
 
-        self.result = result
+            self.result = result
 
-        for task in self.after_tasks:
-            task(self._lizy, args)
+            for task in self.after_tasks:
+                rollback = task(self._lizy, args)
+                caution.add_rollback(rollback)
 
-        return result
+        return caution.result
 
     @classmethod
     def init_all(cls, lizy):
@@ -72,11 +77,11 @@ class BeforeTask(object):
         self._command = command
 
     def __call__(self, lizy, args):
-        self.execute(lizy, args)
+        return self.execute(lizy, args)
 
     @abstractmethod
     def execute(self, lizy, args):
-        pass
+        pass  # pragma: no cover
 
 
 class AfterTask(BeforeTask):
@@ -87,7 +92,7 @@ class AfterTask(BeforeTask):
 
     @property
     def _command_result(self):
-        return self._command.result
+        return self._command.result  # pragma: no cover
 
 
 class NamedCommand(Command):

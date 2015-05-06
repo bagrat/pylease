@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-import git  # noqa
 
 
 class Extension(object):
@@ -17,7 +16,7 @@ class Extension(object):
 
     @abstractmethod
     def load(self):
-        pass
+        pass  # pragma: no cover
 
     @classmethod
     def init_all(cls, lizy):
@@ -27,3 +26,6 @@ class Extension(object):
             extension.init_all(lizy)
             if not getattr(extension, cls._IGNORE_ME_VAR_NAME):
                 extension(lizy)
+
+
+import git  # noqa

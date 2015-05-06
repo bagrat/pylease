@@ -1,6 +1,5 @@
-from mock import Mock
-from nose.tools import eq_, ok_
-import sys
+from mock import Mock, MagicMock
+from nose.tools import ok_
 
 from pylease.ctxmgmt import Caution, ReplacedSetup
 from tests import PyleaseTest, MockedSetupPy
@@ -29,52 +28,25 @@ class ContextManagersTest(PyleaseTest):
 
             callback.assert_called_once_with(**kwargs)
 
-    class Dummy():
-            pass
-
     def test_caution_context_manager_must_rollback_everything_if_error_occurs(self):
-        exit_code = 123
+        rb1 = MagicMock()
+        rb2 = MagicMock()
+        rb3 = MagicMock()
 
-        def exiting_method():
-            sys.exit(exit_code)
+        with Caution() as caution:
+            caution.add_rollback(rb1)
+            caution.add_rollback(rb2)
 
-        obj = self.Dummy()  # Just an object that has __dict__
-        attr = "someattr"
-        val = "someval"
+            raise Exception()
 
-        raises_error = False
-        try:
-            with Caution(self.Rollback(obj, attr, val)):
-                exiting_method()
-        except SystemExit as ex:
-            raises_error = True
-            eq_(ex.code, exit_code)
-
-        ok_(raises_error)
-        eq_(getattr(obj, attr), val)
+        rb1.assert_called_once_with()
+        rb2.assert_called_once_with()
+        ok_(not rb3.called)
 
     def test_caution_context_manager_should_leave_everythin_as_is_if_no_error_occurs(self):
-        obj = self.Dummy()
-        attr = "someattr"
-        val = "someval"
+        rb1 = MagicMock()
 
-        raises_error = False
-        try:
-            with Caution(self.Rollback(obj, attr, val)):
-                pass
-        except Exception:
-            raises_error = True
+        with Caution() as caution:
+            caution.add_rollback(rb1)
 
-        ok_(not raises_error)
-        ok_(not hasattr(obj, attr))
-
-    class Rollback(object):
-        def __init__(self, obj, attr, val):
-            super(ContextManagersTest.Rollback, self).__init__()
-
-            self.obj = obj
-            self.attr = attr
-            self.val = val
-
-        def rollback(self):
-            setattr(self.obj, self.attr, self.val)
+        ok_(not rb1.called)

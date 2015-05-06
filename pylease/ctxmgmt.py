@@ -6,18 +6,28 @@ class Caution(object):
     """
     Context manager for handling rollback process in case of setup failure
     """
-    def __init__(self, rollback_object):
+    def __init__(self):
         super(Caution, self).__init__()
 
-        self.rollback_object = rollback_object
+        self._rollbacks = []
+        self.result = 0
+
+    def add_rollback(self, rollback):
+        self._rollbacks.append(rollback)
 
     def __enter__(self):
-        pass
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type:
-            logme.error("some error occurred: rolling back...")
-            self.rollback_object.rollback()
+            logme.error("Some error occurred: rolling back...\n{}".format(exc_val.message))
+
+            for rollback in self._rollbacks:
+                rollback()
+
+            self.result = 1
+
+        return True
 
 
 class ReplacedSetup(object):

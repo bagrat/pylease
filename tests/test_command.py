@@ -4,7 +4,7 @@ from nose.tools import ok_, eq_
 from pylease.ex import PyleaseError
 from pylease import Pylease
 from pylease.util import SubclassIgnoreMark
-from pylease.command import Command, NamedCommand
+from pylease.command import Command, NamedCommand, BeforeTask, AfterTask
 
 
 class CommandTest(TestCase):
@@ -165,3 +165,36 @@ class CommandTest(TestCase):
 
         before.assert_called_once_with(lizy, args)
         ok_(not after.called)
+
+    def test_all_actions_must_be_rolled_back_on_failure(self):
+        before_rollback = MagicMock()
+        command_rollback = MagicMock()
+
+        class RollbackTestCommand(NamedCommand):
+            def __init__(self, lizy):
+                super(RollbackTestCommand, self).__init__(lizy, 'rollback desc')
+
+            def _process_command(self, lizy, args):
+                return command_rollback, None
+
+        class B(BeforeTask):
+            def execute(self, lizy, args):
+                return before_rollback
+
+        class A(AfterTask):
+            def execute(self, lizy, args):
+                raise PyleaseError()
+
+        subparser_mock = lambda: 0
+        subparser_mock.add_parser = MagicMock()
+
+        lizy = Pylease(None, subparser_mock, None)
+        command = RollbackTestCommand(lizy)
+
+        command.add_before_task(B())
+        command.add_after_task(A())
+
+        command(None)
+
+        before_rollback.assert_called_once_with()
+        command_rollback.assert_called_once_with()

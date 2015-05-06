@@ -59,7 +59,7 @@ class CommandLineTest(PyleaseTest):
                                             setup()
                                             """)
         with MockedSetupPy(setup_py_contents, self):
-            self.assertRaises(pylease.ex.PyleaseError, main, ['make', '--major'])
+            ok_(main(['make', '--major']) != 0)
 
     def test_make_command_must_warn_wwhen_more_than_one_version_specs_are_found(self):
         pylease.logme.warn = MagicMock()
