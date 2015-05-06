@@ -62,18 +62,17 @@ class CommandTest(TestCase):
             def _process_command(self, lizy, args):
                 pass
 
-            def _get_name(self):
-                pass
+        # with patch.object(Command, '__init__') as init_mock:
+        with patch.object(C, '_process_command') as process_command:
+            # init_mock.return_value = None
 
-        with patch.object(Command, '__init__') as init_mock:
-            with patch.object(C, '_process_command') as process_command:
-                init_mock.return_value = None
+            subparser_mock = lambda: 0
+            subparser_mock.add_parser = MagicMock()
+            lizy = Pylease(None, subparser_mock, None)
+            c = C(lizy)
+            c(None)
 
-                c = C(None)
-                c._lizy = None
-                c(None)
-
-                process_command.assert_called_once_with(None, None)
+            process_command.assert_called_once_with(lizy, None)
 
     def test_init_all_should_add_all_commands_to_lizy(self):
         class Base(NamedCommand):
@@ -118,3 +117,51 @@ class CommandTest(TestCase):
         calls = [call(A.NAME, help=A.DESC), call(BCommand.NAME.lower(), help=BCommand.DESC),
                  call(CCommand.NAME.lower(), help=CCommand.DESC)]
         subparser_mock.add_parser.assert_has_calls(calls, any_order=True)
+
+    def test_command_must_execute_before_tasks_before_self_execution(self):
+        class SuccessCommand(NamedCommand):
+            def __init__(self, lizy):
+                super(SuccessCommand, self).__init__(lizy, 'desc')
+
+            def _process_command(self, lizy, args):
+                return 0
+
+        before = MagicMock()
+        after = MagicMock()
+
+        lizy = MagicMock()
+        args = MagicMock()
+
+        sc = SuccessCommand(lizy)
+
+        sc.add_before_task(before)
+        sc.add_after_task(after)
+
+        sc(args)
+
+        before.assert_called_once_with(lizy, args)
+        after.assert_called_once_with(lizy, args)
+
+    def test_command_must_not_execute_after_tasks_in_case_of_failure(self):
+        class FailureCommand(NamedCommand):
+            def __init__(self, lizy):
+                super(FailureCommand, self).__init__(lizy, 'desc')
+
+            def _process_command(self, lizy, args):
+                return 1
+
+        before = MagicMock()
+        after = MagicMock()
+
+        lizy = MagicMock()
+        args = MagicMock()
+
+        sc = FailureCommand(lizy)
+
+        sc.add_before_task(before)
+        sc.add_after_task(after)
+
+        sc(args)
+
+        before.assert_called_once_with(lizy, args)
+        ok_(not after.called)

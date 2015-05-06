@@ -18,6 +18,8 @@ class Command(object):
         self.description = description
         self.parser = lizy.add_subparser(self.name, help=self.description)
         self._lizy = lizy
+        self.before_tasks = set()
+        self.after_tasks = set()
 
         lizy.add_command(self.name, self)
 
@@ -26,7 +28,16 @@ class Command(object):
         pass  # pragma: no cover
 
     def __call__(self, args):
-        return self._process_command(self._lizy, args)
+        for task in self.before_tasks:
+            task(self._lizy, args)
+
+        result = self._process_command(self._lizy, args)
+
+        if result is None or result == 0:
+            for task in self.after_tasks:
+                task(self._lizy, args)
+
+        return result
 
     @classmethod
     def init_all(cls, lizy):
@@ -36,6 +47,12 @@ class Command(object):
             command.init_all(lizy)
             if not getattr(command, cls._IGNORE_ME_VAR_NAME):
                 command(lizy)
+
+    def add_before_task(self, task):
+        self.before_tasks.add(task)
+
+    def add_after_task(self, task):
+        self.after_tasks.add(task)
 
 
 class NamedCommand(Command):
