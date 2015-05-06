@@ -8,7 +8,6 @@ script:
   - "flake8 pylease"
   - "flake8 tests"
   - "nosetests"
-  - "./scripts/github-pages-publish.sh $TRAVIS_BRANCH"
 after_success:
   - "coveralls"
 
