@@ -1,6 +1,6 @@
-doc-warnings: yes
+doc-warnings: no
 test-warnings: yes
-strictness: veryhigh
+strictness: high
 max-line-length: 140
 autodetect: yes
 requirements:
@@ -8,5 +8,4 @@ requirements:
     - deps/test.txt
     - deps/doc.txt
 ignore-paths:
-    - docs
-    - mypackage/vendor
+    - doc
