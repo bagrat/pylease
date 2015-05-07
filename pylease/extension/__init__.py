@@ -2,6 +2,10 @@ from abc import ABCMeta, abstractmethod
 
 
 class Extension(object):
+
+    # pylint: disable=R0921
+    # This class is referenced from outside this file
+
     __metaclass__ = ABCMeta
 
     _IGNORE_ME_VAR_NAME = 'ignore_me'

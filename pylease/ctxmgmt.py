@@ -1,5 +1,5 @@
 import setuptools
-from pylease import logme
+from pylease import LOGME as logme
 
 
 class Caution(object):
@@ -48,6 +48,7 @@ class ReplacedSetup(object):
         super(ReplacedSetup, self).__init__()
 
         self._callback = callback
+        self._old_setup = None
 
     def __enter__(self):
         self._old_setup = setuptools.setup

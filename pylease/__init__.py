@@ -5,14 +5,14 @@ __version__ = '0.2'
 
 _LOGGING_FMT = "%(levelname)s: %(message)s"
 
-logme = logging.getLogger(__name__)
-logme.setLevel(logging.ERROR)
+LOGME = logging.getLogger(__name__)
+LOGME.setLevel(logging.ERROR)
 
-handler = logging.StreamHandler()
-handler.setLevel(logging.ERROR)
-handler.setFormatter(logging.Formatter(fmt=_LOGGING_FMT))
+HANDLER = logging.StreamHandler()
+HANDLER.setLevel(logging.ERROR)
+HANDLER.setFormatter(logging.Formatter(fmt=_LOGGING_FMT))
 
-logme.addHandler(handler)
+LOGME.addHandler(HANDLER)
 
 
 class Pylease(object):

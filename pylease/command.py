@@ -1,5 +1,7 @@
+from __future__ import print_function
 from abc import ABCMeta, abstractmethod
-from pylease import logme
+
+from pylease import LOGME as logme
 from pylease.ctxmgmt import Caution
 from pylease.ex import PyleaseError
 from pylease.filemgmt import update_files
@@ -8,6 +10,11 @@ from pylease.util import SubclassIgnoreMark
 
 
 class Command(object):
+
+    # pylint: disable=no-self-use, too-many-instance-attributes
+    # The whole logic of Pylease is centralized on the Command class,
+    # thus it is reasonable to have more than seven instance attributes.
+
     __metaclass__ = ABCMeta
 
     _IGNORE_ME_VAR_NAME = 'ignore_me'
@@ -92,6 +99,10 @@ class BeforeTask(object):
 
 
 class AfterTask(BeforeTask):
+
+    # pylint: disable=W0223
+    # AfterTask is also abstract
+
     __metaclass__ = ABCMeta
 
     @property
@@ -100,6 +111,10 @@ class AfterTask(BeforeTask):
 
 
 class NamedCommand(Command):
+
+    # pylint: disable=W0223
+    # NamedCommand is also abstract
+
     _SUFFIX = "Command"
     ignore_me = SubclassIgnoreMark('NamedCommand')
 
