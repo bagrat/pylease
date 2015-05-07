@@ -26,6 +26,3 @@ class Extension(object):
             extension.init_all(lizy)
             if not getattr(extension, cls._IGNORE_ME_VAR_NAME):
                 extension(lizy)
-
-
-import git  # noqa

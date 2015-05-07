@@ -1,9 +1,10 @@
 import os
 import sys
 from argparse import ArgumentParser
-from pylease.extension import Extension
 
 import pylease
+from pylease.extension import Extension
+from pylease.extension import git  # noqa
 from pylease.command import Command
 from pylease.ctxmgmt import ReplacedSetup
 from pylease.vermgmt import InfoContainer
