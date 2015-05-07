@@ -1,0 +1,12 @@
+doc-warnings: yes
+test-warnings: yes
+strictness: veryhigh
+max-line-length: 140
+autodetect: yes
+requirements:
+    - deps/core.txt
+    - deps/test.txt
+    - deps/doc.txt
+ignore-paths:
+    - docs
+    - mypackage/vendor

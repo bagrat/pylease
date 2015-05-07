@@ -2,8 +2,8 @@ language: python
 python:
   - "2.7"
 install:
-  - "pip install -r req.txt"
-  - "pip install -r req-test.txt"
+  - "pip install -r deps/core.txt"
+  - "pip install -r deps/test.txt"
 script:
   - "flake8 pylease"
   - "flake8 tests"
