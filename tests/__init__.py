@@ -58,6 +58,8 @@ class MockedFile(object):
         self._filename = filename
         self.mock_file_path = os.path.join(self._mock_path, self._filename)
         self._for_import = for_import
+        self._orig_open = None
+        self._orig_getcwd = None
 
     def __enter__(self):
         with open(self.mock_file_path, 'w') as file_mock:
@@ -115,6 +117,13 @@ class MockedSetupPy(MockedFile):
 
 
 class CapturedStdout(object):
+    def __init__(self):
+        super(CapturedStdout, self).__init__()
+
+        self._stdout = None
+        self.output = None
+        self._stringio = None
+
     def __enter__(self):
         self._stdout = sys.stdout
         sys.stdout = self._stringio = StringIO()
