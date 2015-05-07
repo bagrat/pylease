@@ -1,4 +1,6 @@
+import ConfigParser
 import logging
+import os
 
 __author__ = 'bagrat'
 __version__ = '0.2'
@@ -23,6 +25,19 @@ class Pylease(object):
         self.cmd_subparsers = cmd_subparsers
         self.info_container = info_container
         self.commands = {}
+
+        config = {}
+        config_parser = ConfigParser.SafeConfigParser()
+        try:
+            if os.path.exists('setup.cfg'):
+                config_parser.read('setup.cfg')
+                items = config_parser.items('pylease')
+                for item in items:
+                    config[item[0]] = item[1]
+        except ConfigParser.NoSectionError:
+            LOGME.warn('No pylease section found in setup.cfg')
+
+        self.confg = config
 
     def add_command(self, name, command):
         self.commands[name] = command
