@@ -1,5 +1,5 @@
 doc-warnings: no
-test-warnings: yes
+test-warnings: no
 strictness: high
 max-line-length: 140
 autodetect: yes

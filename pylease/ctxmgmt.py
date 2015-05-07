@@ -24,7 +24,8 @@ class Caution(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type:
-            logme.error("Some error occurred: rolling back...\n{}".format(exc_val.message))
+            msg = "Some error occurred: rolling back...\n{}".format(exc_val.message)
+            logme.error(msg)
 
             if hasattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME):
                 rollback = getattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME)

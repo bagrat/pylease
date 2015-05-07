@@ -4,11 +4,10 @@ import textwrap
 from unittest import TestCase
 import shutil
 import __builtin__
-
-__author__ = 'bagrat'
-
 import mock
 import os
+
+__author__ = 'bagrat'
 
 
 class TestError(Exception):
@@ -86,8 +85,8 @@ class MockedFile(object):
             os.getcwd = self._orig_getcwd
 
     def contents(self):
-        with self._orig_open(self.mock_file_path, 'r') as f:
-            return f.read()
+        with self._orig_open(self.mock_file_path, 'r') as mock_file:
+            return mock_file.read()
 
     def _open_mock(self):
         mocked_abs_file = os.path.abspath(self._filename)

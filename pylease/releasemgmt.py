@@ -3,12 +3,12 @@ from pylease.vermgmt import DevedVersion
 
 __author__ = 'bagrat'
 
-_levels = ['major', 'minor', 'patch', 'dev']
-_default_level_index = 0
-default_level = _levels[_default_level_index]
+_LEVELS = ['major', 'minor', 'patch', 'dev']
+_DEFAULT_LEVEL_INDEX = 0
+DEFAULT_LEVEL = _LEVELS[_DEFAULT_LEVEL_INDEX]
 
 
-def release(old, level=default_level, count=1):
+def release(old, level=DEFAULT_LEVEL, count=1):
     """
     Returns a new version which is ``count`` times higher from ``old`` by level ``level``.
 
@@ -17,8 +17,8 @@ def release(old, level=default_level, count=1):
     :param count: The number to increase the level by
     """
 
-    if level not in _levels:
-        raise ReleaseError('Unknown release level: {level}\nShould be one of those: {levels}'.format(level=level, levels=_levels))
+    if level not in _LEVELS:
+        raise ReleaseError('Unknown release level: {level}\nShould be one of those: {levels}'.format(level=level, levels=_LEVELS))
 
     new_version = DevedVersion(old)
 

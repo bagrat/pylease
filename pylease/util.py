@@ -14,8 +14,8 @@ def get_caller_module(depth=0):
     :return: The module instance
     """
 
-    f = inspect.stack()[1 + depth]
-    return inspect.getmodule(f[0])
+    frame = inspect.stack()[1 + depth]
+    return inspect.getmodule(frame[0])
 
 
 class SubclassIgnoreMark(object):

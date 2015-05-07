@@ -1,16 +1,16 @@
 __author__ = 'bagrat'
 
 
-def replace_version(content, frm, to):
+def replace_version(content, from_version, to_version):
     """
     Replaces the value of the version specification value in the contents of
     ``setup_py`` from ``frm`` to ``to``.
     :param content: The string containing version specification
-    :param to: The new version to be set
+    :param to_version: The new version to be set
     :return: (result_content, number of occurrences)
     """
-    frm_str = str(frm)
-    to_str = str(to)
+    frm_str = str(from_version)
+    to_str = str(to_version)
 
     count = content.count(frm_str)
 
@@ -19,10 +19,10 @@ def replace_version(content, frm, to):
     return result_setup_py, count
 
 
-def update_files(frm, to, files=None):
+def update_files(from_version, to_version, files=None):
     """
     Update setup.py contents. See replace_version.
-    :param to: The new version to be set.
+    :param to_version: The new version to be set.
     """
     counts = {}
     if not files:
@@ -31,7 +31,7 @@ def update_files(frm, to, files=None):
         with open(filename, 'r') as setup_py:
             content = setup_py.read()
 
-            new_content, count = replace_version(content, frm, to)
+            new_content, count = replace_version(content, from_version, to_version)
 
             counts[filename] = count
 

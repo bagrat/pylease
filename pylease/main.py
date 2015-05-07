@@ -20,11 +20,11 @@ def main(args=None):
     sub_parsers = parser.add_subparsers(help='Pylease commands', dest='command')
 
     sys.path = [os.getcwd()] + sys.path
-    ic = InfoContainer()
-    with ReplacedSetup(ic.set_info):
+    info = InfoContainer()
+    with ReplacedSetup(info.set_info):
         __import__('setup')
 
-    lizy = pylease.Pylease(parser, sub_parsers, ic)
+    lizy = pylease.Pylease(parser, sub_parsers, info)
 
     Command.init_all(lizy)
     Extension.init_all(lizy)

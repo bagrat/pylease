@@ -165,6 +165,7 @@ class MakeCommand(NamedCommand):
             logme.warn("More than one version specification found.")
             logme.debug("Occurrences:")
             for filename in counts:
-                logme.debug("\t{filename}: {count}".format(filename=filename, count=counts[filename]))
+                msg = "\t{filename}: {count}".format(filename=filename, count=counts[filename])
+                logme.debug(msg)
 
         return {self.KEY_OLD_VERSION: str(old_version), self.KEY_NEW_VERSION: str(new_version), self.KEY_LEVEL: str(level)}
