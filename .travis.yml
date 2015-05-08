@@ -5,8 +5,6 @@ install:
   - "pip install -r deps/core.txt"
   - "pip install -r deps/test.txt"
 script:
-  - "flake8 pylease"
-  - "flake8 tests"
   - "nosetests"
 after_success:
   - "coveralls"
