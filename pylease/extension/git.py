@@ -9,7 +9,7 @@ class GitExtension(Extension):
     v<version>, where version is the current version being released. Also
     makes additional commit containing the updated setup.py.
     """
-
+    # pylint: disable=too-few-public-methods
     def load(self):
         make_command = self._lizy.commands['make']
         parser = make_command.parser

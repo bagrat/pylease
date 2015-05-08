@@ -33,24 +33,28 @@ class CommandLineTest(PyleaseTest):
                                             """)
 
         with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
-            main(['make', '--dev'])
-            expected_version = '0.12.dev1'
-            eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
+            with MockedFile('setup.cfg', '', self):
+                main(['make', '--dev'])
+                expected_version = '0.12.dev1'
+                eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
 
         with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
-            main(['make', '--patch'])
-            expected_version = '0.12.1'
-            eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
+            with MockedFile('setup.cfg', '', self):
+                main(['make', '--patch'])
+                expected_version = '0.12.1'
+                eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
 
         with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
-            main(['make', '--minor'])
-            expected_version = '0.13'
-            eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
+            with MockedFile('setup.cfg', '', self):
+                main(['make', '--minor'])
+                expected_version = '0.13'
+                eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
 
         with MockedSetupPy(setup_py_contents.format(version=version), self) as setup_py:
-            main(['make', '--major'])
-            expected_version = '1.0'
-            eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
+            with MockedFile('setup.cfg', '', self):
+                main(['make', '--major'])
+                expected_version = '1.0'
+                eq_(setup_py.contents(), setup_py_contents.format(version=expected_version))
 
     def test_make_command_must_return_error_when_no_version_spec_is_found(self):
         setup_py_contents = textwrap.dedent("""
@@ -69,8 +73,10 @@ class CommandLineTest(PyleaseTest):
                                             version='1.0'
                                             setup(version='1.0')
                                             """)
+
         with MockedSetupPy(setup_py_contents, self):
-            main(['make', '--major'])
+            with MockedFile('setup.cfg', '', self):
+                main(['make', '--major'])
 
         ok_(pylease.LOGME.warn.called)
 
