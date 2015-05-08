@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 
 import pylease
 from pylease.extension import Extension
-from pylease.extension import git  # noqa
+from pylease.extension import git, pypi  # noqa
 from pylease.command import Command
 from pylease.ctxmgmt import ReplacedSetup
 from pylease.vermgmt import InfoContainer
