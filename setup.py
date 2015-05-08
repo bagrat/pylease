@@ -1,8 +1,5 @@
-import pylease
-
-__author__ = 'bagrat'
-
 from setuptools import setup, find_packages
+import pylease
 
 download_url = "https://github.com/n9code/pylease/archive/v{version}.tar.gz".format(version=pylease.__version__)
 
@@ -11,6 +8,9 @@ with open('./deps/test.txt') as req:
 
 with open('./deps/core.txt') as req:
     install_requires = req.read().split('\n')
+
+with open('./README.rst') as desc:
+    long_desc = desc.read()
 
 classifiers = ['License :: OSI Approved :: MIT License',
                'Intended Audience :: Developers',
@@ -26,6 +26,7 @@ classifiers = ['License :: OSI Approved :: MIT License',
 config = {
     'name': 'pylease',
     'description': 'Easy package versioning and release management',
+    'long_description': long_desc,
     'author': 'Bagrat Aznauryan',
     'url': 'git@github.com:n9code/pylease.git',
     'download_url': download_url,
