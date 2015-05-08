@@ -1,9 +1,10 @@
+import pylease
+
 __author__ = 'bagrat'
 
 from setuptools import setup, find_packages
 
-version = '0.2'
-download_url = "https://github.com/n9code/pylease/archive/v{version}.tar.gz".format(version=version)
+download_url = "https://github.com/n9code/pylease/archive/v{version}.tar.gz".format(version=pylease.__version__)
 
 with open('./deps/test.txt') as req:
     tests_require = req.read().split('\n')
@@ -29,7 +30,7 @@ config = {
     'url': 'git@github.com:n9code/pylease.git',
     'download_url': download_url,
     'author_email': 'bagrat@aznauryan.org',
-    'version': version,
+    'version': pylease.__version__,
     'install_requires': install_requires,
     'tests_require': tests_require,
     'classifiers': classifiers,

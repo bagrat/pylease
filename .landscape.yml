@@ -9,3 +9,4 @@ requirements:
     - deps/doc.txt
 ignore-paths:
     - doc
+    - setup.py
