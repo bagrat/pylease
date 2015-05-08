@@ -37,7 +37,7 @@ class Pylease(object):
         except ConfigParser.NoSectionError:
             LOGME.warn('No pylease section found in setup.cfg')
 
-        self.confg = config
+        self.config = config
 
     def add_command(self, name, command):
         self.commands[name] = command
@@ -47,3 +47,14 @@ class Pylease(object):
 
     def add_subparser(self, *args, **kwargs):
         return self.cmd_subparsers.add_parser(*args, **kwargs)
+
+    def _get_config_list_value(self, key):
+        values = None
+        if key in self.config:
+            values_str_list = self.config[key].replace(' ', '')
+            values = values_str_list.split(',')
+
+        return values
+
+    def get_version_files(self):
+        return self._get_config_list_value('version-files')

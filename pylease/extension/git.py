@@ -25,7 +25,7 @@ class GitExtension(Extension):
         make_command.add_after_task(GitAfterTask(None))
 
 
-class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually
+class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually TODO: try to test
     def execute(self, lizy, args):
         if args.use_git:
             version = self._command_result[self._command.KEY_NEW_VERSION]

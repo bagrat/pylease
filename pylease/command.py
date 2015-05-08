@@ -170,7 +170,9 @@ class MakeCommand(NamedCommand):
 
         new_version = release(old_version, level)
 
-        counts = update_files(old_version, new_version)
+        files = lizy.get_version_files()
+
+        counts = update_files(old_version, new_version, files)
 
         count = 0
         for version_file in counts:

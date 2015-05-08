@@ -5,10 +5,10 @@ from setuptools import setup, find_packages
 version = '0.2'
 download_url = "https://github.com/n9code/pylease/archive/v{version}.tar.gz".format(version=version)
 
-with open('./req-test.txt') as req:
+with open('./deps/test.txt') as req:
     tests_require = req.read().split('\n')
 
-with open('./req.txt') as req:
+with open('./deps/core.txt') as req:
     install_requires = req.read().split('\n')
 
 classifiers = ['License :: OSI Approved :: MIT License',

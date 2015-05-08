@@ -87,10 +87,38 @@ class CommandLineTest(PyleaseTest):
         with MockedFile('setup.cfg', contents, self):
             lizy = pylease.Pylease(None, None, None)
 
-            ok_(key1 in lizy.confg)
-            ok_(key2 in lizy.confg)
-            eq_(lizy.confg[key1], val1)
-            eq_(lizy.confg[key2], val2)
+            ok_(key1 in lizy.config)
+            ok_(key2 in lizy.config)
+            eq_(lizy.config[key1], val1)
+            eq_(lizy.config[key2], val2)
+
+    def test_make_release_must_update_the_version_in_all_provided_files(self):
+        version = '0.12'
+        file1_name = 'file1'
+        file2_name = 'file2'
+        file1_contents = textwrap.dedent("""file1
+                                            version='{version}'
+                                            """)
+        file2_contents = textwrap.dedent("""file2
+                                            version='{version}'
+                                            """)
+        config_contents = textwrap.dedent("""
+                                          [pylease]
+                                          version-files = {}, {}
+                                          """.format(file1_name, file2_name))
+        setup_py_contents = textwrap.dedent("""
+                                            from setuptools import setup
+                                            setup(version='{}')
+                                            """.format(version))
+
+        with MockedSetupPy(setup_py_contents, self):
+            with MockedFile('setup.cfg', config_contents, self):
+                with MockedFile(file1_name, file1_contents.format(version=version), self) as file1:
+                    with MockedFile(file2_name, file2_contents.format(version=version), self) as file2:
+                        main(['make', '--minor'])
+                        expected_version = '0.13'
+                        eq_(file1.contents(), file1_contents.format(version=expected_version))
+                        eq_(file2.contents(), file2_contents.format(version=expected_version))
 
     # def test_git(self):
     #     setup_py_contents = textwrap.dedent("""
