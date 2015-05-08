@@ -1,11 +1,9 @@
 from abc import ABCMeta, abstractmethod
 
 
+# This class is referenced from outside this file
+# pylint: disable=R0921
 class Extension(object):
-
-    # pylint: disable=R0921
-    # This class is referenced from outside this file
-
     __metaclass__ = ABCMeta
 
     _IGNORE_ME_VAR_NAME = 'ignore_me'
