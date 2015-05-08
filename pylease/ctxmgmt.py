@@ -6,6 +6,8 @@ class Caution(object):
     """
     Context manager for handling rollback process in case of setup failure
     """
+    # pylint: too-few-public-methods
+    # The number of public methods is reasonable for this kind of class
 
     EXCEPTION_ROLLBACK_ATTR_NAME = 'rollback'
 
@@ -44,6 +46,8 @@ class ReplacedSetup(object):
     Context manager for replacing setuptools setup method and then setting
     all back.
     """
+    # pylint: too-few-public-methods
+    # The number of public methods is reasonable for this kind of class
     def __init__(self, callback):
         super(ReplacedSetup, self).__init__()
 

@@ -10,6 +10,7 @@ class GitExtension(Extension):
     makes additional commit containing the updated setup.py.
     """
     # pylint: disable=too-few-public-methods
+    # The number of public methods is reasonable for this kind of class
     def load(self):
         make_command = self._lizy.commands['make']
         parser = make_command.parser

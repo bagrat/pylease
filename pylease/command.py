@@ -10,7 +10,6 @@ from pylease.util import SubclassIgnoreMark
 
 
 class Command(object):
-
     # pylint: disable=no-self-use, too-many-instance-attributes
     # The whole logic of Pylease is centralized on the Command class,
     # thus it is reasonable to have more than seven instance attributes.
@@ -74,6 +73,9 @@ class Command(object):
 
 
 class BeforeTask(object):
+    # pylint: disable=too-few-public-methods
+    # The number of public methods is reasonable for this kind of class
+
     __metaclass__ = ABCMeta
 
     def __init__(self, rollback=None):
@@ -99,9 +101,9 @@ class BeforeTask(object):
 
 
 class AfterTask(BeforeTask):
-
-    # pylint: disable=W0223
+    # pylint: disable=too-few-public-methods, W0223
     # AfterTask is also abstract
+    # The number of public methods is reasonable for this kind of class
 
     __metaclass__ = ABCMeta
 
@@ -111,9 +113,9 @@ class AfterTask(BeforeTask):
 
 
 class NamedCommand(Command):
-
-    # pylint: disable=W0223
+    # pylint: disable=W0223, too-few-public-methods
     # NamedCommand is also abstract
+    # The number of public methods is reasonable for this kind of class
 
     _SUFFIX = "Command"
     ignore_me = SubclassIgnoreMark('NamedCommand')
@@ -126,6 +128,9 @@ class NamedCommand(Command):
 
 
 class StatusCommand(NamedCommand):
+    # pylint: too-few-public-methods
+    # The number of public methods is reasonable for this kind of class
+
     OUTPUT_FMT = 'Project Name: {name}\nCurrent Version: {version}'
 
     KEY_VERSION = 'version'
@@ -141,6 +146,9 @@ class StatusCommand(NamedCommand):
 
 
 class MakeCommand(NamedCommand):
+    # pylint: too-few-public-methods
+    # The number of public methods is reasonable for this kind of class
+
     KEY_OLD_VERSION = 'old_version'
     KEY_NEW_VERSION = 'new_version'
     KEY_LEVEL = 'level'
