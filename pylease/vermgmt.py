@@ -85,6 +85,9 @@ class DevedVersion(StrictVersion):
 
 
 class InfoContainer(object):
+    """
+    A simple container that maps a provided dictionary to its attributes.
+    """
     def __init__(self):
         super(InfoContainer, self).__init__()
 

@@ -4,7 +4,8 @@ __author__ = 'bagrat'
 def replace_version(content, from_version, to_version):
     """
     Replaces the value of the version specification value in the contents of
-    ``setup_py`` from ``frm`` to ``to``.
+    ``contents`` from ``from_version`` to ``to_version``.
+
     :param content: The string containing version specification
     :param to_version: The new version to be set
     :return: (result_content, number of occurrences)
@@ -21,8 +22,11 @@ def replace_version(content, from_version, to_version):
 
 def update_files(from_version, to_version, files=None):
     """
-    Update setup.py contents. See replace_version.
+    Update contents of files. See replace_version.
+
+    :param from_version: The old version to be replaced.
     :param to_version: The new version to be set.
+    :param files: A list of files, to update versions in.
     """
     counts = {}
     if not files:
@@ -42,6 +46,9 @@ def update_files(from_version, to_version, files=None):
 
 
 class VersionRollback(object):
+    """
+    A rollback object that simple rolls back the updated version.
+    """
     def __init__(self, old_version, new_version, files=None):
         super(VersionRollback, self).__init__()
 

@@ -5,7 +5,7 @@ from pylease.logger import LOGME as logme
 
 class Caution(object):
     """
-    Context manager for handling rollback process in case of setup failure
+    Context manager for handling rollback process in case of pylease failure
     """
     # pylint: too-few-public-methods
     # The number of public methods is reasonable for this kind of class

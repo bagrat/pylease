@@ -22,7 +22,7 @@ class SubclassIgnoreMark(object):
     """
     This class is designed to mark particular classes for special purposes. It
     implements the Descriptor protocol, and the value of a property instance of
-    this class is True on ly for the class where the property was originally assigned.
+    this class is True only for the class where the property was originally assigned.
     """
     def __init__(self, cls_name):
         """
