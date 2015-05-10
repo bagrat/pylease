@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod
 from pylease import LOGME as logme  # pep8:disable=N811
 from pylease.ctxmgmt import Caution
 from pylease.ex import PyleaseError
-from pylease.filemgmt import update_files
+from pylease.filemgmt import update_files, VersionRollback
 from pylease.releasemgmt import release
 from pylease.util import SubclassIgnoreMark
 
@@ -92,7 +92,7 @@ class BeforeTask(object):
             self.execute(lizy, args)
             return self._rollback
         except Exception as ex:
-            setattr(ex, 'rollback', self._rollback)
+            setattr(ex, Caution.EXCEPTION_ROLLBACK_ATTR_NAME, self._rollback)
             raise ex
 
     @abstractmethod
@@ -193,4 +193,5 @@ class MakeCommand(NamedCommand):
                 msg = "\t{filename}: {count}".format(filename=filename, count=counts[filename])
                 logme.debug(msg)
 
+        self.rollback = VersionRollback(old_version, new_version, files).rollback
         return {self.KEY_OLD_VERSION: str(old_version), self.KEY_NEW_VERSION: str(new_version), self.KEY_LEVEL: str(level)}

@@ -8,10 +8,10 @@ __version__ = '0.2'
 _LOGGING_FMT = "%(levelname)s: %(message)s"
 
 LOGME = logging.getLogger(__name__)
-LOGME.setLevel(logging.ERROR)
+LOGME.setLevel(logging.INFO)
 
 HANDLER = logging.StreamHandler()
-HANDLER.setLevel(logging.ERROR)
+HANDLER.setLevel(logging.INFO)
 HANDLER.setFormatter(logging.Formatter(fmt=_LOGGING_FMT))
 
 LOGME.addHandler(HANDLER)

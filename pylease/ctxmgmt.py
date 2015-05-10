@@ -1,4 +1,5 @@
 import setuptools
+import sys
 from pylease import LOGME as logme
 
 
@@ -18,6 +19,7 @@ class Caution(object):
         self.result = 0
 
     def add_rollback(self, rollback):
+        logme.info(rollback)
         if rollback:
             self._rollbacks.add(rollback)
 
@@ -31,6 +33,7 @@ class Caution(object):
 
             if hasattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME):
                 rollback = getattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME)
+                logme.info(rollback)
                 rollback()
 
             for rollback in self._rollbacks:
@@ -60,6 +63,8 @@ class ReplacedSetup(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         setuptools.setup = self._old_setup
+        if 'setup' in sys.modules:
+            del sys.modules['setup']
 
     def _version_reporter(self, **kwargs):
         """
