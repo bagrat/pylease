@@ -1,7 +1,10 @@
 import logging
 
 
-class ColorFormatter(logging.Formatter):
+class ColorFormatter(logging.Formatter):  # pragma: no cover
+    """
+    Custom Formatter for Pylease logger that colors the log message depending on the log level.
+    """
     color_end = "\x1b[1;0m"
     colors = dict(
         default='0',
@@ -48,7 +51,10 @@ HANDLER.setFormatter(ColorFormatter(fmt=_LOGGING_FMT))
 LOGME.addHandler(HANDLER)
 
 
-def add_verbose_handler():
+def add_verbose_handler():  # pragma: no cover
+    """
+    Adds separate handler to the Pylease logger with level DEBUG.
+    """
     verbose_handler = logging.StreamHandler()
     verbose_handler.setLevel(logging.DEBUG)
     verbose_handler.setFormatter(ColorFormatter(fmt=_LOGGING_FMT))

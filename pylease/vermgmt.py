@@ -84,7 +84,7 @@ class DevedVersion(StrictVersion):
         return '{prefix}{suffix}'.format(prefix=prefix, suffix=suffix)
 
 
-class InfoContainer(object):  # pragma: no cover
+class InfoContainer(object):
     def __init__(self):
         super(InfoContainer, self).__init__()
 

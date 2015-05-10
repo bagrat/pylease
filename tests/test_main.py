@@ -128,14 +128,6 @@ class CommandLineTest(PyleaseTest):
                         eq_(file1.contents(), file1_contents.format(version=expected_version))
                         eq_(file2.contents(), file2_contents.format(version=expected_version))
 
-    # def test_git(self):
-    #     setup_py_contents = textwrap.dedent("""
-    #                                         from setuptools import setup
-    #                                         setup(version='1.0')
-    #                                         """)
-    #     with MockedSetupPy(setup_py_contents, self):
-    #         main(['make', '--major', '--git-tag'])
-
     def test_pylease_must_load_external_extensions(self):
         extension_package_name = "some_extension"
         extension_class_name = "SomeExtension"
@@ -167,3 +159,11 @@ class CommandLineTest(PyleaseTest):
                     subclasses_str.append(subclass.__name__)
 
                 ok_(extension_class_name, subclasses_str)
+
+    def test_verbose_argument_must_add_debug_handler(self):
+        handlers_count = len(pylease.logger.LOGME.handlers)
+        pylease.logger.LOGME.debug = MagicMock()
+
+        main(['--verbose', 'status'])
+
+        eq_(len(pylease.logger.LOGME.handlers), handlers_count + 1)
