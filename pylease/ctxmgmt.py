@@ -19,7 +19,6 @@ class Caution(object):
         self.result = 0
 
     def add_rollback(self, rollback):
-        logme.info(rollback)
         if rollback:
             self._rollbacks.add(rollback)
 
@@ -30,10 +29,12 @@ class Caution(object):
         if exc_type:
             msg = "Some error occurred: rolling back...\n{}".format(exc_val.message)
             logme.error(msg)
+            logme.debug("Error occurred with type {}".format(exc_type.__name__))
 
+            logme.debug("Checking {} exception for rollback".format(exc_type.__name__))
             if hasattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME):
                 rollback = getattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME)
-                logme.info(rollback)
+                logme.debug("Found rollback '{}', executing...".format(rollback))
                 rollback()
 
             for rollback in self._rollbacks:

@@ -22,6 +22,8 @@ class Command(object):
     def __init__(self, lizy, name, description, rollback=None):
         super(Command, self).__init__()
 
+        logme.debug("Initializing {} command with rollback {}".format(name, rollback))
+
         self.name = name
         self.description = description
         self.parser = lizy.add_subparser(self.name, help=self.description)
@@ -40,16 +42,22 @@ class Command(object):
     def __call__(self, args):
         with Caution() as caution:
             for task in self.before_tasks:
+                logme.debug("Executing before task {}.".format(task))
                 rollback = task(self._lizy, args)
+                logme.debug("Before task returned rollback {}.".format(rollback))
                 caution.add_rollback(rollback)
 
+            logme.debug("Executing command {} with args {} and rollback {}.".format(self.name, args, self.rollback))
             result = self._process_command(self._lizy, args)
+            logme.debug("Command {} finished, rollback is {}.".format(self.name, self.rollback))
             caution.add_rollback(self.rollback)
 
             self.result = result
 
             for task in self.after_tasks:
+                logme.debug("Executing after task {}.".format(task))
                 rollback = task(self._lizy, args)
+                logme.debug("After task returned rollback {}.".format(rollback))
                 caution.add_rollback(rollback)
 
         return caution.result
@@ -81,6 +89,7 @@ class BeforeTask(object):
     def __init__(self, rollback=None):
         super(BeforeTask, self).__init__()
 
+        logme.debug("Initializing {} with rollback '{}'".format(self.__class__.__name__, rollback))
         self._command = None
         self._rollback = rollback
 
@@ -89,9 +98,12 @@ class BeforeTask(object):
 
     def __call__(self, lizy, args):
         try:
+            logme.debug("Executing task {}".format(self.__class__.__name__))
             self.execute(lizy, args)
+            logme.debug("Done executing task {}, rollback is {}".format(self.__class__.__name__, self._rollback))
             return self._rollback
-        except Exception as ex:
+        except BaseException as ex:
+            logme.debug("{} error occurred, setting rollback '{}' to exception".format(ex.__class__.__name__, self._rollback))
             setattr(ex, Caution.EXCEPTION_ROLLBACK_ATTR_NAME, self._rollback)
             raise ex
 

@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from pylease import LOGME as logme
 
 
 class Extension(object):
@@ -10,6 +11,8 @@ class Extension(object):
 
     def __init__(self, lizy):
         super(Extension, self).__init__()
+
+        logme.debug("Initializing {}".format(self.__class__.__name__))
 
         self._lizy = lizy
 
