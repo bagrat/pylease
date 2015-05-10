@@ -1,8 +1,10 @@
 import textwrap
 from mock import MagicMock
 from nose.tools import eq_, ok_
+import sys
 import pylease
 from pylease.command import StatusCommand
+from pylease.extension import Extension
 from pylease.main import main
 from tests import PyleaseTest, MockedSetupPy, CapturedStdout, MockedFile
 
@@ -133,3 +135,35 @@ class CommandLineTest(PyleaseTest):
     #                                         """)
     #     with MockedSetupPy(setup_py_contents, self):
     #         main(['make', '--major', '--git-tag'])
+
+    def test_pylease_must_load_external_extensions(self):
+        extension_package_name = "some_extension"
+        extension_class_name = "SomeExtension"
+        extension_contents = textwrap.dedent("""
+                                             from pylease.extension import Extension
+                                             from mock import MagicMock
+
+                                             class {}(Extension):
+                                                def load(self):
+                                                    pass
+
+                                             """.format(extension_class_name))
+
+        config_contents = textwrap.dedent("""
+                                          [pylease]
+                                          use-plugins = {}
+                                          """.format(extension_package_name))
+
+        with MockedFile(extension_package_name + '.py', extension_contents, self, for_import=True):
+            with MockedFile('setup.cfg', config_contents, self):
+                lizy = pylease.Pylease(None, None, None)
+
+                ok_('use-plugins' in lizy.config)
+                ok_(extension_package_name in sys.modules)
+
+                subclasses = Extension.__subclasses__()
+                subclasses_str = []
+                for subclass in subclasses:
+                    subclasses_str.append(subclass.__name__)
+
+                ok_(extension_class_name, subclasses_str)

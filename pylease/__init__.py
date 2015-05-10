@@ -39,6 +39,8 @@ class Pylease(object):
 
         self.config = config
 
+        self._load_extensions()
+
     def add_command(self, name, command):
         self.commands[name] = command
 
@@ -58,3 +60,9 @@ class Pylease(object):
 
     def get_version_files(self):
         return self._get_config_list_value('version-files')
+
+    def _load_extensions(self):
+        extension_packages = self._get_config_list_value('use-plugins') or []
+
+        for package in extension_packages:
+            __import__(package)
