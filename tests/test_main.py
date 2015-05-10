@@ -68,7 +68,7 @@ class CommandLineTest(PyleaseTest):
             ok_(main(['make', '--major']) != 0)
 
     def test_make_command_must_warn_wwhen_more_than_one_version_specs_are_found(self):
-        pylease.LOGME.warn = MagicMock()
+        pylease.logger.LOGME.warn = MagicMock()
 
         setup_py_contents = textwrap.dedent("""
                                             from setuptools import setup
@@ -80,7 +80,7 @@ class CommandLineTest(PyleaseTest):
             with MockedFile('setup.cfg', '', self):
                 main(['make', '--major'])
 
-        ok_(pylease.LOGME.warn.called)
+        ok_(pylease.logger.LOGME.warn.called)
 
     def test_pylease_must_load_configuration_into_pylease_object(self):
         key1 = 'key1'

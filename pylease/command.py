@@ -1,7 +1,7 @@
 from __future__ import print_function
 from abc import ABCMeta, abstractmethod
 
-from pylease import LOGME as logme  # pep8:disable=N811
+from pylease.logger import LOGME as logme  # pep8:disable=N811
 from pylease.ctxmgmt import Caution
 from pylease.ex import PyleaseError
 from pylease.filemgmt import update_files, VersionRollback

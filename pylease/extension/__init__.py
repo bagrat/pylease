@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from pylease import LOGME as logme
+from pylease.logger import LOGME as logme
 
 
 class Extension(object):

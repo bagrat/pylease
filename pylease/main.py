@@ -2,6 +2,7 @@ import os
 import sys
 from argparse import ArgumentParser
 
+import logger
 import pylease
 from pylease.extension import Extension
 from pylease.extension import git, pypi  # noqa
@@ -17,6 +18,11 @@ def main(args=None):
     # Initialize argument parser
     parser = ArgumentParser()
     parser.add_argument('--version', action='version', version=version_info())
+    parser.add_argument('--verbose', '-v',
+                        action='store_true',
+                        dest='verbose',
+                        default=False,
+                        help='Make Pylease verbose, i.e. show more execution information')
     sub_parsers = parser.add_subparsers(help='Pylease commands', dest='command')
 
     sys.path = [os.getcwd()] + sys.path
@@ -31,15 +37,12 @@ def main(args=None):
 
     args = parser.parse_args(args)
 
+    if args.verbose:
+        logger.add_verbose_handler()
+
     command_name = args.command
 
     return lizy.execute_command(command_name, args)
-
-    #
-    #
-    # vr = VersionRollback(old_version, new_version)
-    # with Caution(vr):
-    #     __import__('setup')
 
 
 def version_info():

@@ -1,5 +1,3 @@
-__author__ = 'bagrat'
-
 
 class PyleaseError(Exception):
     pass

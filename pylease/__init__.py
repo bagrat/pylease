@@ -1,20 +1,8 @@
 import ConfigParser
-import logging
+from pylease.logger import LOGME as logme
 import os
 
-__author__ = 'bagrat'
 __version__ = '0.2'
-
-_LOGGING_FMT = "%(levelname)s: %(message)s"
-
-LOGME = logging.getLogger(__name__)
-LOGME.setLevel(logging.DEBUG)
-
-HANDLER = logging.StreamHandler()
-HANDLER.setLevel(logging.DEBUG)
-HANDLER.setFormatter(logging.Formatter(fmt=_LOGGING_FMT))
-
-LOGME.addHandler(HANDLER)
 
 
 class Pylease(object):
@@ -35,7 +23,7 @@ class Pylease(object):
                 for item in items:
                     config[item[0]] = item[1]
         except ConfigParser.NoSectionError:
-            LOGME.warn('No pylease section found in setup.cfg')
+            logme.warn('No pylease section found in setup.cfg')
 
         self.config = config
 

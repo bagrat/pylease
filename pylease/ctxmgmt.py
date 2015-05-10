@@ -1,6 +1,6 @@
 import setuptools
 import sys
-from pylease import LOGME as logme
+from pylease.logger import LOGME as logme
 
 
 class Caution(object):

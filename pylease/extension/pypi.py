@@ -1,5 +1,5 @@
 import sys
-from pylease import LOGME as logme
+from pylease.logger import LOGME as logme
 from pylease.command import AfterTask
 from pylease.extension import Extension
 
