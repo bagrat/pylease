@@ -49,6 +49,9 @@ class Pylease(object):
     def get_version_files(self):
         return self._get_config_list_value('version-files')
 
+    def get_plugins(self):
+        return self._get_config_list_value('use-plugins') or []
+
     def _load_extensions(self):
         extension_packages = self._get_config_list_value('use-plugins') or []
 

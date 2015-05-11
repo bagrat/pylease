@@ -167,3 +167,16 @@ class CommandLineTest(PyleaseTest):
         main(['--verbose', 'status'])
 
         eq_(len(pylease.logger.LOGME.handlers), handlers_count + 1)
+
+    def test_plugins(self):
+        plugin_name = 'some_plugin'
+        config_contents = textwrap.dedent("""
+                                          [pylease]
+                                          use-plugins = {}
+                                          """.format(plugin_name))
+
+        with MockedFile(plugin_name + '.py', '', self):
+            with MockedFile('setup.cfg', config_contents, self):
+                main(['status'])
+
+        ok_(plugin_name in sys.modules)
