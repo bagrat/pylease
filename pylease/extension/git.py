@@ -11,7 +11,7 @@ class GitExtension(Extension):
     """
     Git extension creates an annotated tag in the git repository named
     v<version>, where version is the current version being released. Also
-    makes additional commit containing the updated setup.py.
+    makes additional commit containing the updated version files.
     """
     # pylint: disable=too-few-public-methods
     # The number of public methods is reasonable for this kind of class
@@ -66,8 +66,6 @@ class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other t
                 raise PyleaseError(err)
             self._rollback.enable_stage(GitRollback.TAG_STAGE)
 
-            raise Exception()
-
 
 class GitRollback(Rollback):  # pragma: no cover - Unable to test this other than manually TODO: try to test
     COMMIT_STAGE = 'commit'
@@ -84,10 +82,12 @@ class GitRollback(Rollback):  # pragma: no cover - Unable to test this other tha
         proc = subprocess.Popen('git log -n 1 --grep="{}"  --format="%H"'.format(tag_message), stdout=subprocess.PIPE, shell=True)
         proc.wait()
         release_commit = proc.stdout.read()
+
         proc = subprocess.Popen('git log -n 2 --format="%H" {}'.format(release_commit, tag_message), stdout=subprocess.PIPE, shell=True)
         proc.wait()
         pre_release_commit = proc.stdout.read().split('\n')[1]
-        proc = subprocess.Popen(['git', 'reset', pre_release_commit], stderr=subprocess.PIPE)
+
+        proc = subprocess.Popen(['git', 'reset', pre_release_commit])
         proc.wait()
 
     @Stage(TAG_STAGE, 1)
