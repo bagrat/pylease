@@ -32,10 +32,7 @@ class SubclassIgnoreMark(object):
         self._cls_name = cls_name
 
     def __get__(self, instance, owner):
-        if owner.__name__ == self._cls_name:
-            return True
-        else:
-            return False
+        return owner.__name__ == self._cls_name
 
 
 def ignore_subclass(klass):

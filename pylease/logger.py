@@ -39,6 +39,16 @@ class ColorFormatter(logging.Formatter):  # pragma: no cover
         return "\x1b[%s;%sm%s%s" % (bold, self.colors.get(color, self.colors['default']), text, self.color_end)
 
 
+class LevelFilter(logging.Filter):
+    def __init__(self, name='', level=logging.DEBUG):
+        super(LevelFilter, self).__init__(name)
+
+        self._level = level
+
+    def filter(self, record):
+        return int(record.levelno / 10) * 10 == self._level
+
+
 _LOGGING_FMT = "%(message)s"
 
 LOGME = logging.getLogger(__name__)
@@ -58,5 +68,7 @@ def add_verbose_handler():  # pragma: no cover
     verbose_handler = logging.StreamHandler()
     verbose_handler.setLevel(logging.DEBUG)
     verbose_handler.setFormatter(ColorFormatter(fmt=_LOGGING_FMT))
+
+    verbose_handler.addFilter(LevelFilter(level=verbose_handler.level))
 
     LOGME.addHandler(verbose_handler)

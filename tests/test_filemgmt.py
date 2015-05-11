@@ -49,7 +49,7 @@ class FileManagementTest(PyleaseTest):
         eq_(expected_new_setup_py, actual_new_setup_py, "replace_version() must update version")
         eq_(expected_count, actual_count, "replace_version() must return correct number of occurrences")
 
-    def test_Replace_version_must_return_zero_occurrences_if_no_version_specification_found(self):
+    def test_replace_version_must_return_zero_occurrences_if_no_version_specification_found(self):
         setup_py_tp = """
                       some line here
                       and another here

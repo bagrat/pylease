@@ -1,5 +1,5 @@
 import ConfigParser
-from pylease.logger import LOGME as logme
+from pylease.logger import LOGME as logme  # noqa
 import os
 
 __version__ = '0.2'

@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from pylease.logger import LOGME as logme
+from pylease.logger import LOGME as logme  # noqa
 
 
 class Extension(object):

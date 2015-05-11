@@ -1,6 +1,6 @@
 import setuptools
 import sys
-from pylease.logger import LOGME as logme
+from pylease.logger import LOGME as logme  # noqa
 
 
 class Caution(object):
@@ -34,8 +34,11 @@ class Caution(object):
             logme.debug("Checking {} exception for rollback".format(exc_type.__name__))
             if hasattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME):
                 rollback = getattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME)
-                logme.debug("Found rollback '{}', executing...".format(rollback))
-                rollback()
+                if rollback:
+                    logme.debug("Found rollback '{}', executing...".format(rollback))
+                    rollback()
+                else:
+                    logme.debug("No rollback provided".format(rollback))
 
             for rollback in self._rollbacks:
                 rollback()

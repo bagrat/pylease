@@ -17,7 +17,7 @@ class TestError(Exception):
 class PyleaseTest(TestCase):
     MOCK_SUBDIR = os.path.join('tests', 'mock')
 
-    def setUp(self):
+    def setUp(self):  # noqa
         super(PyleaseTest, self).setUpClass()
 
         cwd = os.getcwd()
@@ -28,7 +28,7 @@ class PyleaseTest(TestCase):
 
         os.makedirs(self.mock_path)
 
-    def tearDown(self):
+    def tearDown(self):  # noqa
         super(PyleaseTest, self).tearDownClass()
 
         shutil.rmtree(self.MOCK_SUBDIR)

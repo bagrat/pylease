@@ -1,7 +1,9 @@
+
 from __future__ import print_function
 from abc import ABCMeta, abstractmethod
 
-from pylease.logger import LOGME as logme  # pep8:disable=N811
+
+from pylease.logger import LOGME as logme  # noqa
 from pylease.ctxmgmt import Caution
 from pylease.ex import PyleaseError
 from pylease.filemgmt import update_files, VersionRollback
@@ -41,8 +43,8 @@ class Command(object):
 
     def __call__(self, args):
         with Caution() as caution:
+            logme.debug("Executing before tasks.")
             for task in self.before_tasks:
-                logme.debug("Executing before task {}.".format(task))
                 rollback = task(self._lizy, args)
                 logme.debug("Before task returned rollback {}.".format(rollback))
                 caution.add_rollback(rollback)
@@ -54,8 +56,8 @@ class Command(object):
 
             self.result = result
 
+            logme.debug("Executing after tasks.")
             for task in self.after_tasks:
-                logme.debug("Executing after task {}.".format(task))
                 rollback = task(self._lizy, args)
                 logme.debug("After task returned rollback {}.".format(rollback))
                 caution.add_rollback(rollback)
@@ -92,6 +94,14 @@ class BeforeTask(object):
         logme.debug("Initializing {} with rollback '{}'".format(self.__class__.__name__, rollback))
         self._command = None
         self._rollback = rollback
+        self._needs_rollback = False
+
+    def enable_rollback(self, rollback=None):
+        if rollback:
+            if self._rollback:
+                logme.debug('Overwriting existing rollback for task "{}"'.format(self.__class__.__name__))
+            self._rollback = rollback
+        self._needs_rollback = True
 
     def set_command(self, command):
         self._command = command
@@ -100,11 +110,14 @@ class BeforeTask(object):
         try:
             logme.debug("Executing task {}".format(self.__class__.__name__))
             self.execute(lizy, args)
-            logme.debug("Done executing task {}, rollback is {}".format(self.__class__.__name__, self._rollback))
-            return self._rollback
+
+            if self._needs_rollback:
+                logme.debug("Done executing task {}, rollback is {}".format(self.__class__.__name__, self._rollback))
+                return self._rollback
         except BaseException as ex:
-            logme.debug("{} error occurred, setting rollback '{}' to exception".format(ex.__class__.__name__, self._rollback))
-            setattr(ex, Caution.EXCEPTION_ROLLBACK_ATTR_NAME, self._rollback)
+            if self._needs_rollback:
+                logme.debug("{} error occurred, setting rollback '{}' to exception".format(ex.__class__.__name__, self._rollback))
+                setattr(ex, Caution.EXCEPTION_ROLLBACK_ATTR_NAME, self._rollback)
             raise ex
 
     @abstractmethod

@@ -1,5 +1,5 @@
 import sys
-from pylease.logger import LOGME as logme
+from pylease.logger import LOGME as logme  # noqa
 from pylease.command import AfterTask
 from pylease.extension import Extension
 
@@ -23,6 +23,8 @@ class PypiExtension(Extension):
 class PypiAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually TODO: try to test
     def execute(self, lizy, args):
         if args.to_pypi:
+            self.enable_rollback()
+
             orig_args = sys.argv
             sys.argv = ['setup.py', 'sdist', 'upload']
             __import__('setup')
