@@ -1,5 +1,6 @@
 from subprocess import call
 import subprocess
+from pylease.command.rollback import Rollback, Stage
 from pylease.ex import PyleaseError
 from pylease.command.task import AfterTask
 from pylease.extension import Extension
@@ -30,6 +31,8 @@ class GitExtension(Extension):
 
 
 class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually TODO: try to test
+    TAG_MESSAGE_FMT = 'Prepare release v{version}'
+
     def execute(self, lizy, args):
         if args.use_git:
             version = self._command_result[self._command.KEY_NEW_VERSION]
@@ -37,7 +40,7 @@ class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other t
 
             logme.info('Creating git tag {}'.format(tag_name))
 
-            self.enable_rollback(GitRollback(version).rollback)
+            self.enable_rollback(GitRollback(version))
 
             logme.debug("Staging {} files for commit".format(lizy.get_version_files()))
             proc = subprocess.Popen(['git', 'add'] + lizy.get_version_files(), stderr=subprocess.PIPE)
@@ -48,12 +51,12 @@ class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other t
                 raise PyleaseError(err)
 
             logme.debug("Committing files {}".format(lizy.get_version_files()))
-            proc = subprocess.Popen(['git', 'commit', '-m', 'Prepare release v{version}'.format(version=version)], stderr=subprocess.PIPE)
+            proc = subprocess.Popen(['git', 'commit', '-m', self.TAG_MESSAGE_FMT.format(version=version)], stderr=subprocess.PIPE)
             proc.wait()
             if proc.returncode:
                 err = proc.stderr.read()
                 raise PyleaseError(err)
-            self._rollback.commit_done = True
+            self._rollback.enable_stage(GitRollback.COMMIT_STAGE)
 
             logme.debug("Adding git tag")
             proc = subprocess.Popen(['git', 'tag', '-a', tag_name], stderr=subprocess.PIPE)
@@ -61,22 +64,32 @@ class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other t
             if proc.returncode:
                 err = proc.stderr.read()
                 raise PyleaseError(err)
-            self._rollback.tag_done = True
+            self._rollback.enable_stage(GitRollback.TAG_STAGE)
 
             raise Exception()
 
 
-class GitRollback(object):  # pragma: no cover - Unable to test this other than manually TODO: try to test
+class GitRollback(Rollback):  # pragma: no cover - Unable to test this other than manually TODO: try to test
+    COMMIT_STAGE = 'commit'
+    TAG_STAGE = 'tag'
+
     def __init__(self, version):
         super(GitRollback, self).__init__()
 
         self._version = version
-        self.commit_done = False
-        self.tag_done = False
 
-    def rollback(self):
-        if self.commit_done:
-            pass
+    @Stage(COMMIT_STAGE, 0)
+    def rollback_commit(self):
+        tag_message = GitAfterTask.TAG_MESSAGE_FMT.format(version=self._version)
+        proc = subprocess.Popen('git log -n 1 --grep="{}"  --format="%H"'.format(tag_message), stdout=subprocess.PIPE, shell=True)
+        proc.wait()
+        release_commit = proc.stdout.read()
+        proc = subprocess.Popen('git log -n 2 --format="%H" {}'.format(release_commit, tag_message), stdout=subprocess.PIPE, shell=True)
+        proc.wait()
+        pre_release_commit = proc.stdout.read().split('\n')[1]
+        proc = subprocess.Popen(['git', 'reset', pre_release_commit], stderr=subprocess.PIPE)
+        proc.wait()
 
-        if self.tag_done:
-            call(['git', 'tag', '-d', 'v{version}'.format(version=self._version)])
+    @Stage(TAG_STAGE, 1)
+    def rollback_tag(self):
+        call(['git', 'tag', '-d', 'v{version}'.format(version=self._version)])
