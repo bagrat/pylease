@@ -2,8 +2,9 @@ import os
 import sys
 from argparse import ArgumentParser
 
-import logger
+
 import pylease
+import pylease.logger as logger
 from pylease.extension import Extension
 from pylease.extension import git, pypi  # noqa
 from pylease.command import Command

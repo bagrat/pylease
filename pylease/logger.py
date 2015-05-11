@@ -2,6 +2,7 @@ import logging
 
 
 class ColorFormatter(logging.Formatter):  # pragma: no cover
+    # pylint: disable=too-few-public-methods
     """
     Custom Formatter for Pylease logger that colors the log message depending on the log level.
     """

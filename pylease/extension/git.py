@@ -31,6 +31,7 @@ class GitExtension(Extension):
 
 
 class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually TODO: try to test
+    # pylint: disable=too-few-public-methods
     TAG_MESSAGE_FMT = 'Prepare release v{version}'
 
     def execute(self, lizy, args):

@@ -6,6 +6,7 @@ from pylease.extension import Extension
 
 
 class PypiExtension(Extension):
+    # pylint: disable=too-few-public-methods
     def load(self):
         make_command = self._lizy.commands['make']
         parser = make_command.parser
@@ -22,6 +23,7 @@ class PypiExtension(Extension):
 
 
 class PypiAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually TODO: try to test
+    # pylint: disable=too-few-public-methods
     def execute(self, lizy, args):
         # pylint: disable=unused-argument
         if args.to_pypi:

@@ -60,6 +60,7 @@ class Rollback(object):
 
 
 class Stage(object):
+    # pylint: disable=too-few-public-methods
     """
     Decorator used in custom `Rollback` classes for associating each method with a stage, and setting priority
     """
