@@ -46,6 +46,7 @@ def update_files(from_version, to_version, files=None):
 
 
 class VersionRollback(object):
+    # pylint: disable=too-few-public-methods
     """
     A rollback object that simple rolls back the updated version.
     """

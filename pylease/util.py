@@ -19,6 +19,7 @@ def get_caller_module(depth=0):
 
 
 class SubclassIgnoreMark(object):
+    # pylint: disable=too-few-public-methods
     """
     This class is designed to mark particular classes for special purposes. It
     implements the Descriptor protocol, and the value of a property instance of
@@ -46,6 +47,7 @@ def ignore_subclass(klass):
 
 
 class IgnoreSubclass(object):
+    # pylint: disable=too-few-public-methods
     """
     This decorator adds the Ignore Mark to the decorated class, without a need to specify
     the class name itself. This class requires to define the property name to be used for

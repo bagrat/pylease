@@ -4,11 +4,11 @@ from pylease.logger import LOGME as logme  # noqa
 
 
 class Caution(object):
+    # pylint: disable=too-few-public-methods
+    # The number of public methods is reasonable for this kind of class
     """
     Context manager for handling rollback process in case of pylease failure
     """
-    # pylint: too-few-public-methods
-    # The number of public methods is reasonable for this kind of class
 
     EXCEPTION_ROLLBACK_ATTR_NAME = 'rollback'
 
@@ -38,7 +38,7 @@ class Caution(object):
                     logme.debug("Found rollback '{}', executing...".format(rollback))
                     rollback()
                 else:
-                    logme.debug("No rollback provided".format(rollback))  # pragma: no cover - no logic involved here, just logging
+                    logme.debug("No rollback provided")  # pragma: no cover - no logic involved here, just logging
 
             for rollback in self._rollbacks:
                 rollback()
@@ -53,7 +53,7 @@ class ReplacedSetup(object):
     Context manager for replacing setuptools setup method and then setting
     all back.
     """
-    # pylint: too-few-public-methods
+    # pylint: disable=too-few-public-methods
     # The number of public methods is reasonable for this kind of class
     def __init__(self, callback):
         super(ReplacedSetup, self).__init__()

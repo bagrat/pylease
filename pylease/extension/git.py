@@ -47,7 +47,6 @@ class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other t
             proc.wait()
             if proc.returncode:
                 err = proc.stderr.read()
-                print(err)
                 raise PyleaseError(err)
 
             logme.debug("Committing files {}".format(lizy.get_version_files()))
@@ -83,7 +82,7 @@ class GitRollback(Rollback):  # pragma: no cover - Unable to test this other tha
         proc.wait()
         release_commit = proc.stdout.read()
 
-        proc = subprocess.Popen('git log -n 2 --format="%H" {}'.format(release_commit, tag_message), stdout=subprocess.PIPE, shell=True)
+        proc = subprocess.Popen('git log -n 2 --format="%H" {}'.format(release_commit), stdout=subprocess.PIPE, shell=True)
         proc.wait()
         pre_release_commit = proc.stdout.read().split('\n')[1]
 

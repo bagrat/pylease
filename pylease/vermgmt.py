@@ -85,6 +85,7 @@ class DevedVersion(StrictVersion):
 
 
 class InfoContainer(object):
+    # pylint: disable=too-few-public-methods
     """
     A simple container that maps a provided dictionary to its attributes.
     """

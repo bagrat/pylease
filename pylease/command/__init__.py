@@ -95,7 +95,8 @@ class NamedCommand(Command):
         super(NamedCommand, self).__init__(lizy, name, description, rollback)
 
 
-class StatusCommand(NamedCommand):  # pylint: too-few-public-methods
+class StatusCommand(NamedCommand):
+    # pylint: disable=too-few-public-methods
     # The number of public methods is reasonable for this kind of class
 
     OUTPUT_FMT = 'Project Name: {name}\nCurrent Version: {version}'
@@ -113,7 +114,7 @@ class StatusCommand(NamedCommand):  # pylint: too-few-public-methods
 
 
 class MakeCommand(NamedCommand):
-    # pylint: too-few-public-methods
+    # pylint: disable=too-few-public-methods
     # The number of public methods is reasonable for this kind of class
 
     KEY_OLD_VERSION = 'old_version'

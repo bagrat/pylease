@@ -23,6 +23,7 @@ class PypiExtension(Extension):
 
 class PypiAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually TODO: try to test
     def execute(self, lizy, args):
+        # pylint: disable=unused-argument
         if args.to_pypi:
             self.enable_rollback(PypiRollback(sys.argv))
 
@@ -48,4 +49,5 @@ class PypiRollback(Rollback):  # pragma: no cover
 
     @Stage(UPLOADED_STAGE)
     def rollback_inform(self):
+        # pylint: disable=no-self-use
         logme.warn('Unable to rollback PyPI upload, please delete the uploaded version manually.')

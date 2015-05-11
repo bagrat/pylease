@@ -40,6 +40,7 @@ class ColorFormatter(logging.Formatter):  # pragma: no cover
 
 
 class LevelFilter(logging.Filter):  # pragma: no cover
+    # pylint: disable=too-few-public-methods
     def __init__(self, name='', level=logging.DEBUG):
         super(LevelFilter, self).__init__(name)
 
