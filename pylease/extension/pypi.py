@@ -1,6 +1,6 @@
 import sys
 from pylease.logger import LOGME as logme  # noqa
-from pylease.command import AfterTask
+from pylease.command.task import AfterTask
 from pylease.extension import Extension
 
 

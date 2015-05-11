@@ -1,7 +1,7 @@
 from subprocess import call
 import subprocess
 from pylease.ex import PyleaseError
-from pylease.command import AfterTask
+from pylease.command.task import AfterTask
 from pylease.extension import Extension
 from pylease.logger import LOGME as logme  # noqa
 

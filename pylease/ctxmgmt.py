@@ -38,7 +38,7 @@ class Caution(object):
                     logme.debug("Found rollback '{}', executing...".format(rollback))
                     rollback()
                 else:
-                    logme.debug("No rollback provided".format(rollback))
+                    logme.debug("No rollback provided".format(rollback))  # pragma: no cover - no logic involved here, just logging
 
             for rollback in self._rollbacks:
                 rollback()

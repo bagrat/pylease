@@ -4,7 +4,8 @@ from nose.tools import ok_, eq_
 from pylease.ex import PyleaseError
 from pylease import Pylease
 from pylease.util import SubclassIgnoreMark
-from pylease.command import Command, NamedCommand, BeforeTask, AfterTask
+from pylease.command import Command, NamedCommand
+from pylease.command.task import BeforeTask, AfterTask
 
 
 class CommandTest(TestCase):
@@ -181,6 +182,7 @@ class CommandTest(TestCase):
         class B(BeforeTask):
             def __init__(self):
                 super(B, self).__init__(before_rollback)
+                self.enable_rollback(before_rollback)
 
             def execute(self, lizy, args):
                 pass
@@ -188,6 +190,7 @@ class CommandTest(TestCase):
         class A(AfterTask):
             def __init__(self):
                 super(A, self).__init__(after_rollback)
+                self._needs_rollback = True
 
             def execute(self, lizy, args):
                 raise PyleaseError()

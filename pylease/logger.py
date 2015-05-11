@@ -39,7 +39,7 @@ class ColorFormatter(logging.Formatter):  # pragma: no cover
         return "\x1b[%s;%sm%s%s" % (bold, self.colors.get(color, self.colors['default']), text, self.color_end)
 
 
-class LevelFilter(logging.Filter):
+class LevelFilter(logging.Filter):  # pragma: no cover
     def __init__(self, name='', level=logging.DEBUG):
         super(LevelFilter, self).__init__(name)
 
