@@ -3,7 +3,7 @@ from pylease.logger import LOGME as logme  # noqa
 
 
 class Extension(object):
-
+    # pylint: disable=abstract-class-not-used
     __metaclass__ = ABCMeta
 
     _IGNORE_ME_VAR_NAME = 'ignore_me'
