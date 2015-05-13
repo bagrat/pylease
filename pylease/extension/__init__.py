@@ -12,7 +12,7 @@ class Extension(object):
     def __init__(self, lizy):
         super(Extension, self).__init__()
 
-        logme.debug("Initializing {}".format(self.__class__.__name__))
+        logme.debug("Initializing %s", self.__class__.__name__)
 
         self._lizy = lizy
 

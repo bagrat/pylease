@@ -12,7 +12,7 @@ class BeforeTask(object):
     def __init__(self, rollback=None):
         super(BeforeTask, self).__init__()
 
-        logme.debug("Initializing {} with rollback '{}'".format(self.__class__.__name__, rollback))
+        logme.debug("Initializing %s with rollback '%s'", self.__class__.__name__, rollback)
         self._command = None
         self._rollback = rollback
         self._needs_rollback = False
@@ -20,7 +20,7 @@ class BeforeTask(object):
     def enable_rollback(self, rollback=None):
         if rollback:
             if self._rollback:
-                logme.debug('Overwriting existing rollback for task "{}"'.format(self.__class__.__name__))
+                logme.debug('Overwriting existing rollback for task "%s"', self.__class__.__name__)
             self._rollback = rollback
         self._needs_rollback = True
 
@@ -29,15 +29,15 @@ class BeforeTask(object):
 
     def __call__(self, lizy, args):
         try:
-            logme.debug("Executing task {}".format(self.__class__.__name__))
+            logme.debug("Executing task %s", self.__class__.__name__)
             self.execute(lizy, args)
 
             if self._needs_rollback:
-                logme.debug("Done executing task {}, rollback is {}".format(self.__class__.__name__, self._rollback))
+                logme.debug("Done executing task %s, rollback is %s", self.__class__.__name__, self._rollback)
                 return self._rollback
         except BaseException as ex:
             if self._needs_rollback:
-                logme.debug("{} error occurred, setting rollback '{}' to exception".format(ex.__class__.__name__, self._rollback))
+                logme.debug("%s error occurred, setting rollback '%s' to exception", ex.__class__.__name__, self._rollback)
                 setattr(ex, Caution.EXCEPTION_ROLLBACK_ATTR_NAME, self._rollback)
             raise ex
 

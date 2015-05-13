@@ -22,7 +22,7 @@ class Command(object):
     def __init__(self, lizy, name, description, rollback=None):
         super(Command, self).__init__()
 
-        logme.debug("Initializing {} command with rollback {}".format(name, rollback))
+        logme.debug("Initializing %s command with rollback %s", name, rollback)
 
         self.name = name
         self.description = description
@@ -44,12 +44,12 @@ class Command(object):
             logme.debug("Executing before tasks.")
             for task in self.before_tasks:
                 rollback = task(self._lizy, args)
-                logme.debug("Before task returned rollback {}.".format(rollback))
+                logme.debug("Before task returned rollback %s.", rollback)
                 caution.add_rollback(rollback)
 
-            logme.debug("Executing command {} with args {} and rollback {}.".format(self.name, args, self.rollback))
+            logme.debug("Executing command %s with args %s and rollback %s.", self.name, args, self.rollback)
             result = self._process_command(self._lizy, args)
-            logme.debug("Command {} finished, rollback is {}.".format(self.name, self.rollback))
+            logme.debug("Command %s finished, rollback is %s.", self.name, self.rollback)
             caution.add_rollback(self.rollback)
 
             self.result = result
@@ -57,7 +57,7 @@ class Command(object):
             logme.debug("Executing after tasks.")
             for task in self.after_tasks:
                 rollback = task(self._lizy, args)
-                logme.debug("After task returned rollback {}.".format(rollback))
+                logme.debug("After task returned rollback %s.", rollback)
                 caution.add_rollback(rollback)
 
         return caution.result

@@ -27,15 +27,14 @@ class Caution(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if exc_type:
-            msg = "Some error occurred: rolling back...\n{}".format(exc_val.message)
-            logme.error(msg)
-            logme.debug("Error occurred with type {}".format(exc_type.__name__))
+            logme.error("Some error occurred: rolling back...\n%s", exc_val.message)
+            logme.debug("Error occurred with type %s", exc_type.__name__)
 
-            logme.debug("Checking {} exception for rollback".format(exc_type.__name__))
+            logme.debug("Checking %s exception for rollback", exc_type.__name__)
             if hasattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME):
                 rollback = getattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME)
                 if rollback:
-                    logme.debug("Found rollback '{}', executing...".format(rollback))
+                    logme.debug("Found rollback '%s', executing...", rollback)
                     rollback()
                 else:
                     logme.debug("No rollback provided")  # pragma: no cover - no logic involved here, just logging

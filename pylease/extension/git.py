@@ -39,18 +39,18 @@ class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other t
             version = self._command_result[self._command.KEY_NEW_VERSION]
             tag_name = 'v{version}'.format(version=version)
 
-            logme.info('Creating git tag {}'.format(tag_name))
+            logme.info('Creating git tag %s', tag_name)
 
             self.enable_rollback(GitRollback(version))
 
-            logme.debug("Staging {} files for commit".format(lizy.get_version_files()))
+            logme.debug("Staging %s files for commit", lizy.get_version_files())
             proc = subprocess.Popen(['git', 'add'] + lizy.get_version_files(), stderr=subprocess.PIPE)
             proc.wait()
             if proc.returncode:
                 err = proc.stderr.read()
                 raise PyleaseError(err)
 
-            logme.debug("Committing files {}".format(lizy.get_version_files()))
+            logme.debug("Committing files %s", lizy.get_version_files())
             proc = subprocess.Popen(['git', 'commit', '-m', self.TAG_MESSAGE_FMT.format(version=version)], stderr=subprocess.PIPE)
             proc.wait()
             if proc.returncode:
