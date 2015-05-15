@@ -11,7 +11,7 @@ Pylease is a regular Python package which comes with a command line tool, obviou
 
     $ pip install pylease
 
-And then just check if everything is fine::
+And then just check if everything went fine::
 
     $ pylease --version
 
