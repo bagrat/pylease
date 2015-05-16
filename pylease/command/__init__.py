@@ -163,3 +163,11 @@ class MakeCommand(NamedCommand):
 
         self.rollback = VersionRollback(old_version, new_version, files).rollback
         return {self.KEY_OLD_VERSION: str(old_version), self.KEY_NEW_VERSION: str(new_version), self.KEY_LEVEL: str(level)}
+
+
+class InitCommand(NamedCommand):
+    def __init__(self, lizy):
+        super(InitCommand, self).__init__(lizy, 'Initialize a new Python project', None)
+
+    def _process_command(self, lizy, args):
+        super(InitCommand, self)._process_command(lizy, args)
