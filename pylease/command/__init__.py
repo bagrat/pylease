@@ -166,6 +166,8 @@ class MakeCommand(NamedCommand):
 
 
 class InitCommand(NamedCommand):
+    # pylint: disable=too-few-public-methods
+    # The number of public methods is reasonable for this kind of class
     def __init__(self, lizy):
         super(InitCommand, self).__init__(lizy, 'Initialize a new Python project', None)
 
