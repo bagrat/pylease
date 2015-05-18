@@ -1,5 +1,6 @@
 from __future__ import print_function
 from abc import ABCMeta, abstractmethod
+import os
 
 from pylease.logger import LOGME as logme  # noqa
 from pylease.ctxmgmt import Caution
@@ -171,5 +172,32 @@ class InitCommand(NamedCommand):
     def __init__(self, lizy):
         super(InitCommand, self).__init__(lizy, 'Initialize a new Python project', None)
 
+        self.parser.add_argument('name', action='store', type=str, help='name of the project to be initiated')
+
     def _process_command(self, lizy, args):
         super(InitCommand, self)._process_command(lizy, args)
+
+        setup_py_contents = """import {name}
+        from setuptools import setup
+
+        setup(name={name},
+              version={name}.__version__)
+        """.format(name=args.name)
+
+        setup_cfg_contents = """[pylease]
+        version-files = {name}/__init__.py
+        """.format(name=args.name)
+
+        init_py_contents="""__version__ = 0.1
+        """.format(name=args.name)
+
+        os.mkdir(args.name)
+
+        with open('setup.py', 'w') as setup_py:
+            setup_py.write(setup_py_contents)
+
+        with open('setup.cfg', 'w') as setup_cfg:
+            setup_cfg.write(setup_cfg_contents)
+
+        with open('{name}/__init__.py', 'w') as init_py:
+            init_py.write(init_py_contents)
