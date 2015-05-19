@@ -193,11 +193,11 @@ class InitCommand(NamedCommand):
 
         os.mkdir(args.name)
 
-        with open('setup.py', 'w') as setup_py:
-            setup_py.write(setup_py_contents)
+        self._write_file('setup.py', setup_py_contents)
+        self._write_file('setup.cfg', setup_cfg_contents)
+        self._write_file('{name}/__init__.py', init_py_contents)
 
-        with open('setup.cfg', 'w') as setup_cfg:
-            setup_cfg.write(setup_cfg_contents)
-
-        with open('{name}/__init__.py', 'w') as init_py:
-            init_py.write(init_py_contents)
+    @classmethod
+    def _write_file(cls, filename, contents):
+        with open(filename) as the_file:
+            the_file.write(contents)
