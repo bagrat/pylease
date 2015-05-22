@@ -1,3 +1,4 @@
+from traceback import format_tb
 import setuptools
 import sys
 from pylease.logger import LOGME as logme  # noqa
@@ -12,11 +13,12 @@ class Caution(object):
 
     EXCEPTION_ROLLBACK_ATTR_NAME = 'rollback'
 
-    def __init__(self):
+    def __init__(self, verbose=False):
         super(Caution, self).__init__()
 
         self._rollbacks = set()
         self.result = 0
+        self._verbose = verbose
 
     def add_rollback(self, rollback):
         if rollback:
@@ -29,6 +31,8 @@ class Caution(object):
         if exc_type:
             logme.error("Some error occurred: rolling back...\n%s", exc_val.message)
             logme.debug("Error occurred with type %s", exc_type.__name__)
+            if self._verbose:
+                logme.debug('\n'.join(format_tb(exc_tb)))
 
             logme.debug("Checking %s exception for rollback", exc_type.__name__)
             if hasattr(exc_val, self.EXCEPTION_ROLLBACK_ATTR_NAME):

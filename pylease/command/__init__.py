@@ -24,7 +24,7 @@ class Command(object):
     _IGNORE_ME_VAR_NAME = 'ignore_me'
     ignore_me = False
 
-    def __init__(self, lizy, name, description, rollback=None):
+    def __init__(self, lizy, name, description, rollback=None, requires_project=True):
         """
         This constructor should be called from child classes at be supplied
         with at least name and description.
@@ -49,6 +49,7 @@ class Command(object):
         self.after_tasks = set()
         self.result = None
         self.rollback = rollback
+        self.requires_project = requires_project
 
         lizy.add_command(self.name, self)
 
@@ -57,7 +58,10 @@ class Command(object):
         pass  # pragma: no cover
 
     def __call__(self, args):
-        with Caution() as caution:
+        with Caution(verbose=args.verbose) as caution:
+            if self.requires_project and self._lizy.info_container.is_empty:
+                raise PyleaseError("'{}' command requires an existing project!".format(self.name))
+
             logme.debug("Executing before tasks.")
             for task in self.before_tasks:
                 rollback = task(self._lizy, args)
@@ -105,11 +109,11 @@ class NamedCommand(Command):
     _SUFFIX = "Command"
     ignore_me = SubclassIgnoreMark('NamedCommand')
 
-    def __init__(self, lizy, description, rollback=None):
+    def __init__(self, lizy, description, rollback=None, requires_project=True):
         my_name = self.__class__.__name__
         name = my_name[:-(len(self._SUFFIX))].lower()
 
-        super(NamedCommand, self).__init__(lizy, name, description, rollback)
+        super(NamedCommand, self).__init__(lizy, name, description, rollback, requires_project)
 
 
 class StatusCommand(NamedCommand):
@@ -187,20 +191,20 @@ class InitCommand(NamedCommand):
     # The number of public methods is reasonable for this kind of class
 
     SETUP_PY_CONTENTS = """import {name}
-    from setuptools import setup
+from setuptools import setup
 
-    setup(name={name},
-          version={name}.__version__)
-    """
+setup(name='{name}',
+      version={name}.__version__)
+"""
     SETUP_CFG_CONTENTS = """[pylease]
-    version-files = {name}/__init__.py
-    """
-    INIT_PY_CONTENTS = """__version__ = {version}
-    """
+version-files = {name}/__init__.py
+"""
+    INIT_PY_CONTENTS = """__version__ = '{version}'
+"""
     INITIAL_VERSION = '0.1'
 
     def __init__(self, lizy):
-        super(InitCommand, self).__init__(lizy, 'Initialize a new Python project', None)
+        super(InitCommand, self).__init__(lizy, 'Initialize a new Python project', requires_project=False)
 
         self.parser.add_argument('name', action='store', type=str, help='name of the project to be initiated')
 
@@ -215,9 +219,9 @@ class InitCommand(NamedCommand):
 
         self._write_file('setup.py', setup_py_contents)
         self._write_file('setup.cfg', setup_cfg_contents)
-        self._write_file('{name}/__init__.py', init_py_contents)
+        self._write_file('{name}/__init__.py'.format(name=args.name), init_py_contents)
 
     @classmethod
     def _write_file(cls, filename, contents):
-        with open(filename) as the_file:
+        with open(os.path.join(os.getcwd(), filename), 'w') as the_file:
             the_file.write(contents)

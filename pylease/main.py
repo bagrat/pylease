@@ -33,10 +33,13 @@ def main(args=None):
     sub_parsers = parser.add_subparsers(help='Pylease commands', dest='command')
 
     # Collect current information about the project
-    sys.path = [os.getcwd()] + sys.path
     info = InfoContainer()
-    with ReplacedSetup(info.set_info):
-        __import__('setup')
+    if os.path.exists(os.path.join(os.getcwd(), 'setup.py')):
+        sys.path = [os.getcwd()] + sys.path
+        with ReplacedSetup(info.set_info):
+            __import__('setup')
+    else:
+        info.is_empty = True
 
     # Initialize Lizy
     lizy = pylease.Pylease(parser, sub_parsers, info)

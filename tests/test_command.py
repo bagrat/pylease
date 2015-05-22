@@ -6,6 +6,7 @@ from pylease import Pylease
 from pylease.util import SubclassIgnoreMark
 from pylease.command import Command, NamedCommand
 from pylease.command.task import BeforeTask, AfterTask
+from pylease.vermgmt import InfoContainer
 
 
 class CommandTest(TestCase):
@@ -69,7 +70,9 @@ class CommandTest(TestCase):
 
             subparser_mock = lambda: 0
             subparser_mock.add_parser = MagicMock()
-            lizy = Pylease(None, subparser_mock, None)
+            info_container = InfoContainer()
+            info_container.is_empty = False
+            lizy = Pylease(None, subparser_mock, info_container)
             c = C(lizy)
             c(None)
 
@@ -133,6 +136,11 @@ class CommandTest(TestCase):
         lizy = MagicMock()
         args = MagicMock()
 
+        info_container = InfoContainer()
+        info_container.is_empty = False
+
+        lizy.info_container = info_container
+
         sc = SuccessCommand(lizy)
 
         sc.add_before_task(before)
@@ -156,6 +164,10 @@ class CommandTest(TestCase):
 
         lizy = MagicMock()
         args = MagicMock()
+
+        info_container = InfoContainer()
+        info_container.is_empty = False
+        lizy.info_container = info_container
 
         sc = FailureCommand(lizy)
 
@@ -198,7 +210,9 @@ class CommandTest(TestCase):
         subparser_mock = lambda: 0
         subparser_mock.add_parser = MagicMock()
 
-        lizy = Pylease(None, subparser_mock, None)
+        info_container = InfoContainer()
+        info_container.is_empty = False
+        lizy = Pylease(None, subparser_mock, info_container)
         command = RollbackTestCommand(lizy)
 
         command.add_before_task(B())

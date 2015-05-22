@@ -94,6 +94,7 @@ class InfoContainer(object):
 
         self.name = None
         self.version = None
+        self.is_empty = False
 
     def set_info(self, **kwargs):
         for key in kwargs:
