@@ -133,3 +133,37 @@ class CapturedStdout(object):
         self.output = self._stringio.getvalue()
 
         sys.stdout = self._stdout
+
+
+class MockedFileWrite(object):
+    _file_map = {}
+
+    def __init__(self, filename):
+        super(MockedFileWrite, self).__init__()
+
+        self._filename = filename
+        self._io = StringIO()
+        self._orig_open = __builtin__.open
+        self._file_map[filename] = self._io
+
+    def open_mock(self):
+        def mock(filename, *args, **kwargs):
+            if filename in self._file_map:
+                return self._file_map[filename]
+            else:
+                return self._orig_open(filename, *args, **kwargs)
+
+        return mock
+
+    def __enter__(self):
+        __builtin__.open = self.open_mock()
+
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        __builtin__.open = self._orig_open
+
+        del self._file_map[self._filename]
+
+    def contents(self):
+        return self._io.getvalue()

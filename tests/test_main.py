@@ -1,12 +1,12 @@
 import textwrap
-from mock import MagicMock
+from mock import MagicMock, mock_open, patch
 from nose.tools import eq_, ok_
 import sys
 import pylease
-from pylease.command import StatusCommand
+from pylease.command import StatusCommand, InitCommand
 from pylease.extension import Extension
 from pylease.main import main
-from tests import PyleaseTest, MockedSetupPy, CapturedStdout, MockedFile
+from tests import PyleaseTest, MockedSetupPy, CapturedStdout, MockedFile, MockedFileWrite
 
 
 class CommandLineTest(PyleaseTest):
@@ -180,3 +180,21 @@ class CommandLineTest(PyleaseTest):
                 main(['status'])
 
         ok_(plugin_name in sys.modules)
+
+    def test_init_command_must_initialize_a_new_project(self):
+        project_name = 'some_project_name'
+
+        import os
+        orig_mkdir = os.mkdir
+        os.mkdir = MagicMock()
+
+        with patch('pylease.command.open', mock_open(), create=True) as open_mock:
+            main(['init', project_name])
+
+        os.mkdir = orig_mkdir
+
+        handle = open_mock.return_value.__enter__.return_value
+
+        handle.write.assert_any_call(InitCommand.SETUP_PY_CONTENTS.format(name=project_name))
+        handle.write.assert_any_call(InitCommand.SETUP_CFG_CONTENTS.format(name=project_name))
+        handle.write.assert_any_call(InitCommand.INIT_PY_CONTENTS.format(version=InitCommand.INITIAL_VERSION))

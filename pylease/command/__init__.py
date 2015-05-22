@@ -169,6 +169,20 @@ class MakeCommand(NamedCommand):
 class InitCommand(NamedCommand):
     # pylint: disable=too-few-public-methods
     # The number of public methods is reasonable for this kind of class
+
+    SETUP_PY_CONTENTS = """import {name}
+    from setuptools import setup
+
+    setup(name={name},
+          version={name}.__version__)
+    """
+    SETUP_CFG_CONTENTS = """[pylease]
+    version-files = {name}/__init__.py
+    """
+    INIT_PY_CONTENTS="""__version__ = {version}
+    """
+    INITIAL_VERSION = '0.1'
+
     def __init__(self, lizy):
         super(InitCommand, self).__init__(lizy, 'Initialize a new Python project', None)
 
@@ -177,19 +191,9 @@ class InitCommand(NamedCommand):
     def _process_command(self, lizy, args):
         super(InitCommand, self)._process_command(lizy, args)
 
-        setup_py_contents = """import {name}
-        from setuptools import setup
-
-        setup(name={name},
-              version={name}.__version__)
-        """.format(name=args.name)
-
-        setup_cfg_contents = """[pylease]
-        version-files = {name}/__init__.py
-        """.format(name=args.name)
-
-        init_py_contents="""__version__ = 0.1
-        """.format(name=args.name)
+        setup_py_contents = self.SETUP_PY_CONTENTS.format(name=args.name)
+        setup_cfg_contents = self.SETUP_CFG_CONTENTS.format(name=args.name)
+        init_py_contents = self.INIT_PY_CONTENTS.format(version=self.INITIAL_VERSION)
 
         os.mkdir(args.name)
 
