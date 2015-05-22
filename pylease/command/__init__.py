@@ -14,6 +14,10 @@ class Command(object):
     # pylint: disable=no-self-use, too-many-instance-attributes
     # The whole logic of Pylease is centralized on the Command class,
     # thus it is reasonable to have more than seven instance attributes.
+    """
+    This class is the main point of Pylease.
+    For adding new commands just inherit from this class and implement `_process_command` method.
+    """
 
     __metaclass__ = ABCMeta
 
@@ -21,6 +25,18 @@ class Command(object):
     ignore_me = False
 
     def __init__(self, lizy, name, description, rollback=None):
+        """
+        This constructor should be called from child classes at be supplied
+        with at least name and description.
+
+        :param lizy: The `lizy` object, which is initialized and passed by Pylease.
+        :param name: The name of the command, which will appear in the `usage` output
+        :param description: Description of the command
+        :param rollback: The rollback object that will be executed in case of failure during or after the command.
+        This parameter may be emitted if the command does not need a rollback, or may be set in the process of command
+        execution if it depends on some parameters during runtime.
+        :return:
+        """
         super(Command, self).__init__()
 
         logme.debug("Initializing %s command with rollback %s", name, rollback)
@@ -179,7 +195,7 @@ class InitCommand(NamedCommand):
     SETUP_CFG_CONTENTS = """[pylease]
     version-files = {name}/__init__.py
     """
-    INIT_PY_CONTENTS="""__version__ = {version}
+    INIT_PY_CONTENTS = """__version__ = {version}
     """
     INITIAL_VERSION = '0.1'
 
