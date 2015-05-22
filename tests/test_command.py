@@ -70,13 +70,15 @@ class CommandTest(TestCase):
 
             subparser_mock = lambda: 0
             subparser_mock.add_parser = MagicMock()
+            args_mock = lambda: 0
+            args_mock.verbose = False
             info_container = InfoContainer()
             info_container.is_empty = False
             lizy = Pylease(None, subparser_mock, info_container)
             c = C(lizy)
-            c(None)
+            c(args_mock)
 
-            process_command.assert_called_once_with(lizy, None)
+            process_command.assert_called_once_with(lizy, args_mock)
 
     def test_init_all_should_add_all_commands_to_lizy(self):
         class Base(NamedCommand):
@@ -209,6 +211,8 @@ class CommandTest(TestCase):
 
         subparser_mock = lambda: 0
         subparser_mock.add_parser = MagicMock()
+        args_mock = lambda: 0
+        args_mock.verbose = False
 
         info_container = InfoContainer()
         info_container.is_empty = False
@@ -218,7 +222,7 @@ class CommandTest(TestCase):
         command.add_before_task(B())
         command.add_after_task(A())
 
-        command(None)
+        command(args_mock)
 
         before_rollback.assert_called_once_with()
         command_rollback.assert_called_once_with()
