@@ -1,6 +1,7 @@
 from __future__ import print_function
 from abc import ABCMeta, abstractmethod
 import os
+from pylease.command.rollback import Rollback, Stage
 
 from pylease.logger import LOGME as logme  # noqa
 from pylease.ctxmgmt import Caution
@@ -217,11 +218,44 @@ version-files = {name}/__init__.py
 
         os.mkdir(args.name)
 
+        rollback = InitRollback(args.name)
+        self.rollback = rollback
+
         self._write_file('setup.py', setup_py_contents)
+        rollback.enable_stage(rollback.SETUPPY_STAGE)
+
         self._write_file('setup.cfg', setup_cfg_contents)
+        rollback.enable_stage(rollback.SETUPCFG_STAGE)
+
         self._write_file('{name}/__init__.py'.format(name=args.name), init_py_contents)
+        rollback.enable_stage(rollback.INITPY_STAGE)
 
     @classmethod
     def _write_file(cls, filename, contents):
         with open(os.path.join(os.getcwd(), filename), 'w') as the_file:
             the_file.write(contents)
+
+class InitRollback(Rollback):
+    SETUPPY_STAGE = 'setuppy'
+    SETUPCFG_STAGE = 'setupcfg'
+    INITPY_STAGE = 'initpy'
+
+    def __init__(self, project_name):
+        super(InitRollback, self).__init__()
+
+        self._name = project_name
+
+    @Stage(SETUPPY_STAGE)
+    def rollback_setuppy(self):
+        logme.debug('Removing setup.py')
+        os.remove('setup.py')
+
+    @Stage(SETUPCFG_STAGE)
+    def rollback_setupcfg(self):
+        logme.debug('Removing setup.cfg')
+        os.remove('setup.cfg')
+
+    @Stage(INITPY_STAGE)
+    def rollback_initpy(self):
+        logme.debug('Removing __init__.py')
+        os.remove('{name}/__init__.py'.format(name=self._name))
