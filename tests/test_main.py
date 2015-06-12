@@ -188,10 +188,15 @@ class CommandLineTest(PyleaseTest):
         orig_mkdir = os.mkdir
         os.mkdir = MagicMock()
 
+        orig_listdir = os.listdir
+        os.listdir = MagicMock()
+        os.listdir.return_value = []
+
         with patch('pylease.command.open', mock_open(), create=True) as open_mock:
             main(['init', project_name])
 
         os.mkdir = orig_mkdir
+        os.listdir = orig_listdir
 
         handle = open_mock.return_value.__enter__.return_value
 

@@ -204,6 +204,10 @@ version-files = {name}/__init__.py
 """
     INITIAL_VERSION = '0.1'
 
+    SETUP_PY_NAME = 'setup.py'
+    SETUP_CFG_NAME = 'setup.cfg'
+    INIT_PY_NAME_FMT = '{name}/__init__.py'
+
     def __init__(self, lizy):
         super(InitCommand, self).__init__(lizy, 'Initialize a new Python project', requires_project=False)
 
@@ -212,22 +216,33 @@ version-files = {name}/__init__.py
     def _process_command(self, lizy, args):
         super(InitCommand, self)._process_command(lizy, args)
 
+        project_name = args.name
+        setup_py_name = self.SETUP_PY_NAME
+        setup_cfg_name = self.SETUP_CFG_NAME
+        init_py_name = self.INIT_PY_NAME_FMT.format(name=project_name)
+
         setup_py_contents = self.SETUP_PY_CONTENTS.format(name=args.name)
         setup_cfg_contents = self.SETUP_CFG_CONTENTS.format(name=args.name)
         init_py_contents = self.INIT_PY_CONTENTS.format(version=self.INITIAL_VERSION)
 
-        os.mkdir(args.name)
-
-        rollback = InitRollback(args.name)
+        rollback = InitRollback(project_name)
         self.rollback = rollback
 
-        self._write_file('setup.py', setup_py_contents)
+        nodes_in_cwd = [node for node in os.listdir('.') if not node.startswith('.')]
+        if nodes_in_cwd:
+            logme.debug('Directory not empty.\nFollowing files are present:\n%s', nodes_in_cwd)
+            raise PyleaseError('Directory not empty.\nSorry, but the directory must be empty to initialise a new project.')
+
+        os.mkdir(project_name)
+        rollback.enable_stage(InitRollback.DIRECTORY_STAGE)
+
+        self._write_file(setup_py_name, setup_py_contents)
         rollback.enable_stage(rollback.SETUPPY_STAGE)
 
-        self._write_file('setup.cfg', setup_cfg_contents)
+        self._write_file(setup_cfg_name, setup_cfg_contents)
         rollback.enable_stage(rollback.SETUPCFG_STAGE)
 
-        self._write_file('{name}/__init__.py'.format(name=args.name), init_py_contents)
+        self._write_file(init_py_name, init_py_contents)
         rollback.enable_stage(rollback.INITPY_STAGE)
 
     @classmethod
@@ -235,10 +250,11 @@ version-files = {name}/__init__.py
         with open(os.path.join(os.getcwd(), filename), 'w') as the_file:
             the_file.write(contents)
 
-class InitRollback(Rollback):
+class InitRollback(Rollback):  # pragma: no cover; Tested in the scope of Rollback class
     SETUPPY_STAGE = 'setuppy'
     SETUPCFG_STAGE = 'setupcfg'
     INITPY_STAGE = 'initpy'
+    DIRECTORY_STAGE = 'directory'
 
     def __init__(self, project_name):
         super(InitRollback, self).__init__()
@@ -248,14 +264,19 @@ class InitRollback(Rollback):
     @Stage(SETUPPY_STAGE)
     def rollback_setuppy(self):
         logme.debug('Removing setup.py')
-        os.remove('setup.py')
+        os.remove(InitCommand.SETUP_PY_NAME)
 
     @Stage(SETUPCFG_STAGE)
     def rollback_setupcfg(self):
         logme.debug('Removing setup.cfg')
-        os.remove('setup.cfg')
+        os.remove(InitCommand.SETUP_CFG_NAME)
 
     @Stage(INITPY_STAGE)
     def rollback_initpy(self):
         logme.debug('Removing __init__.py')
-        os.remove('{name}/__init__.py'.format(name=self._name))
+        os.remove(InitCommand.INIT_PY_NAME_FMT.format(name=self._name))
+
+    @Stage(DIRECTORY_STAGE)
+    def rollback_directory(self):
+        logme.debug('Removing {name}'.format(name=self._name))
+        os.remove(self._name)
