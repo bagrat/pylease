@@ -250,6 +250,7 @@ version-files = {name}/__init__.py
         with open(os.path.join(os.getcwd(), filename), 'w') as the_file:
             the_file.write(contents)
 
+
 class InitRollback(Rollback):  # pragma: no cover; Tested in the scope of Rollback class
     SETUPPY_STAGE = 'setuppy'
     SETUPCFG_STAGE = 'setupcfg'
@@ -278,5 +279,5 @@ class InitRollback(Rollback):  # pragma: no cover; Tested in the scope of Rollba
 
     @Stage(DIRECTORY_STAGE)
     def rollback_directory(self):
-        logme.debug('Removing {name}'.format(name=self._name))
+        logme.debug('Removing %s', self._name)
         os.remove(self._name)
