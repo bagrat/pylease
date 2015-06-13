@@ -14,7 +14,8 @@ This documentation includes all the information needed for you to use Pylease, a
    :maxdepth: 2
 
    pages/intro
-   pages/tutor
+   pages/plugin
+   pages/config
    pages/ext
 
 

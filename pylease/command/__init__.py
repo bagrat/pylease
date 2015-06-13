@@ -202,7 +202,7 @@ version-files = {name}/__init__.py
 """
     INIT_PY_CONTENTS = """__version__ = '{version}'
 """
-    INITIAL_VERSION = '0.1'
+    INITIAL_VERSION = '0.0'
 
     SETUP_PY_NAME = 'setup.py'
     SETUP_CFG_NAME = 'setup.cfg'

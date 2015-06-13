@@ -277,3 +277,5 @@ texinfo_documents = [
 
 # Google Analytics configuration
 googleanalytics_id = 'UA-58471028-2'
+
+rst_epilog = '.. |pylease_version| replace:: %s' % version

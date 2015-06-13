@@ -44,11 +44,6 @@ def main(args=None):
     # Initialize Lizy
     lizy = pylease.Pylease(parser, sub_parsers, info)
 
-    # Load all plugins
-    plugins = lizy.get_plugins()
-    for plugin in plugins:
-        __import__(plugin)
-
     # Initialize Commands and Extensions
     Command.init_all(lizy)
     Extension.init_all(lizy)
