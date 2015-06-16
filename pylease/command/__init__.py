@@ -167,6 +167,7 @@ class MakeCommand(NamedCommand):
         level = args.level
 
         new_version = release(old_version, level)
+        logme.info('%s releasing %s to v%s', level.capitalize(), lizy.info_container.name, new_version)
 
         files = lizy.get_version_files()
 
