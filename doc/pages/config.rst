@@ -16,7 +16,6 @@ However, at some point in time you will need to make some configuration to use P
 
 Following is the list of all configuration parameters with their descriptions.
 
-.. _version-files:
 ``version-files``
     A list of files where the version must be updated to the new one. Here is an example value for this parameter:
 

@@ -4,6 +4,9 @@ from pylease.logger import LOGME as logme  # noqa
 
 
 class BeforeTask(object):
+    """
+
+    """
     # pylint: disable=too-few-public-methods
     # The number of public methods is reasonable for this kind of class
 
@@ -43,6 +46,13 @@ class BeforeTask(object):
 
     @abstractmethod
     def execute(self, lizy, args):
+        """
+        The place where the extension logic goes on.
+
+        Arguments:
+            lizy (pylease.Pylease): The :class:`~pylease.Pylease` singleton that provides all the needed information about the project.
+            args (argparse.Namespace): The arguments supplied to the command line.
+        """
         pass  # pragma: no cover
 
 
@@ -50,9 +60,11 @@ class AfterTask(BeforeTask):
     # pylint: disable=too-few-public-methods, W0223
     # AfterTask is also abstract
     # The number of public methods is reasonable for this kind of class
-
     __metaclass__ = ABCMeta
 
     @property
     def _command_result(self):
+        """
+        A dictionary containing information by the completion of the command execution.
+        """
         return self._command.result  # pragma: no cover

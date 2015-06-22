@@ -2,11 +2,10 @@ from unittest import TestCase
 from mock import patch, MagicMock, call
 from nose.tools import ok_, eq_
 from pylease.ex import PyleaseError
-from pylease import Pylease
+from pylease import Pylease, InfoContainer
 from pylease.util import SubclassIgnoreMark
-from pylease.command import Command, NamedCommand
-from pylease.command.task import BeforeTask, AfterTask
-from pylease.vermgmt import InfoContainer
+from pylease.cmd import Command, NamedCommand
+from pylease.cmd.task import BeforeTask, AfterTask
 
 
 class CommandTest(TestCase):

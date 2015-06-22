@@ -82,20 +82,3 @@ class DevedVersion(StrictVersion):
         suffix = '.dev{ver}'.format(ver=self.dev) if self.dev > 0 else ''
 
         return '{prefix}{suffix}'.format(prefix=prefix, suffix=suffix)
-
-
-class InfoContainer(object):
-    # pylint: disable=too-few-public-methods
-    """
-    A simple container that maps a provided dictionary to its attributes.
-    """
-    def __init__(self):
-        super(InfoContainer, self).__init__()
-
-        self.name = None
-        self.version = None
-        self.is_empty = False
-
-    def set_info(self, **kwargs):
-        for key in kwargs:
-            setattr(self, key, kwargs[key])

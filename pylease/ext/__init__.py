@@ -3,6 +3,13 @@ from pylease.logger import LOGME as logme  # noqa
 
 
 class Extension(object):
+    """
+    The entry point to implementing Pylease extensions. Pylease loads subclasses of this class and invokes the
+    :func:`~pylease.ext.Extension.load` method.
+
+    Attributes:
+        _lizy (pylease.Pylease): The :class:`~pylease.Pylease` singleton, that is initialised and passed to all subclass instances.
+    """
     # pylint: disable=abstract-class-not-used
     __metaclass__ = ABCMeta
 
@@ -20,6 +27,10 @@ class Extension(object):
 
     @abstractmethod
     def load(self):
+        """
+        This method is being called by Pylease when all the extensions are being loaded.  All the initialisation code must be implemented
+        in the body of this method.
+        """
         pass  # pragma: no cover
 
     @classmethod

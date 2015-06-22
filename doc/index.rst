@@ -17,5 +17,6 @@ This documentation includes all the information needed for you to use Pylease, a
    pages/plugin
    pages/config
    pages/ext
+   pages/ref
 
 

@@ -5,11 +5,11 @@ from argparse import ArgumentParser
 
 import pylease
 import pylease.logger as logger
-from pylease.extension import Extension
-from pylease.extension import git, pypi  # noqa
-from pylease.command import Command
+from pylease.ext import Extension
+from pylease.ext import git, pypi  # noqa
+from pylease.cmd import Command
 from pylease.ctxmgmt import ReplacedSetup
-from pylease.vermgmt import InfoContainer
+from pylease import InfoContainer
 
 __author__ = 'bagrat'
 

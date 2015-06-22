@@ -1,6 +1,6 @@
 from mock import MagicMock
 from nose.tools import eq_, ok_
-from pylease.command.rollback import Rollback, Stage
+from pylease.cmd.rollback import Rollback, Stage
 from tests import PyleaseTest
 
 stage1 = 'stage1'

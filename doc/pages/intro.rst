@@ -16,7 +16,7 @@ And then just check if everything went fine:
 .. parsed-literal::
 
     $ pylease --version
-    Pylease version \ |pylease_version|\
+    Pylease version \ |version|\
 
 Workflow
 --------

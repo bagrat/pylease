@@ -1,9 +1,9 @@
 from subprocess import call
 import subprocess
-from pylease.command.rollback import Rollback, Stage
+from pylease.cmd.rollback import Rollback, Stage
 from pylease.ex import PyleaseError
-from pylease.command.task import AfterTask
-from pylease.extension import Extension
+from pylease.cmd.task import AfterTask
+from pylease.ext import Extension
 from pylease.logger import LOGME as logme  # noqa
 
 
@@ -30,7 +30,7 @@ class GitExtension(Extension):
         make_command.add_after_task(GitAfterTask())
 
 
-class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually TODO: try to test
+class GitAfterTask(AfterTask):  # pragma: no cover - Unable to test this other than manually TODO: try to
     # pylint: disable=too-few-public-methods
     TAG_MESSAGE_FMT = 'Prepare release v{version}'
 

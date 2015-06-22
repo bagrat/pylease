@@ -1,6 +1,7 @@
 from unittest import TestCase
 from nose.tools import eq_, ok_
-from pylease.vermgmt import DevedVersion, InfoContainer
+from pylease.vermgmt import DevedVersion
+from pylease import InfoContainer
 
 __author__ = 'bagrat'
 

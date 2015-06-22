@@ -1,8 +1,8 @@
 import sys
-from pylease.command.rollback import Rollback, Stage
+from pylease.cmd.rollback import Rollback, Stage
 from pylease.logger import LOGME as logme  # noqa
-from pylease.command.task import AfterTask
-from pylease.extension import Extension
+from pylease.cmd.task import AfterTask
+from pylease.ext import Extension
 
 
 class PypiExtension(Extension):

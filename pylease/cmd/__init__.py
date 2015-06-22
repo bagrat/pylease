@@ -1,7 +1,7 @@
 from __future__ import print_function
 from abc import ABCMeta, abstractmethod
 import os
-from pylease.command.rollback import Rollback, Stage
+from pylease.cmd.rollback import Rollback, Stage
 
 from pylease.logger import LOGME as logme  # noqa
 from pylease.ctxmgmt import Caution

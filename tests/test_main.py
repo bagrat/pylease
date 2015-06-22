@@ -3,8 +3,8 @@ from mock import MagicMock, mock_open, patch
 from nose.tools import eq_, ok_
 import sys
 import pylease
-from pylease.command import StatusCommand, InitCommand
-from pylease.extension import Extension
+from pylease.cmd import StatusCommand, InitCommand
+from pylease.ext import Extension
 from pylease.main import main
 from tests import PyleaseTest, MockedSetupPy, CapturedStdout, MockedFile, MockedFileWrite
 
@@ -132,7 +132,7 @@ class CommandLineTest(PyleaseTest):
         extension_package_name = "some_extension"
         extension_class_name = "SomeExtension"
         extension_contents = textwrap.dedent("""
-                                             from pylease.extension import Extension
+                                             from pylease.ext import Extension
                                              from mock import MagicMock
 
                                              class {}(Extension):
@@ -192,7 +192,7 @@ class CommandLineTest(PyleaseTest):
         os.listdir = MagicMock()
         os.listdir.return_value = []
 
-        with patch('pylease.command.open', mock_open(), create=True) as open_mock:
+        with patch('pylease.cmd.open', mock_open(), create=True) as open_mock:
             main(['init', project_name])
 
         os.mkdir = orig_mkdir
