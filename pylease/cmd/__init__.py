@@ -16,8 +16,8 @@ class Command(object):
     # The whole logic of Pylease is centralized on the Command class,
     # thus it is reasonable to have more than seven instance attributes.
     """
-    This class is the main point of Pylease.
-    For adding new commands just inherit from this class and implement `_process_command` method.
+    This class is one of the main point of Pylease.
+    For adding new commands just inherit from this class and implement :func:`~pylease.cmd.Command._process_command` method.
     """
 
     __metaclass__ = ABCMeta
@@ -27,16 +27,17 @@ class Command(object):
 
     def __init__(self, lizy, name, description, rollback=None, requires_project=True):
         """
-        This constructor should be called from child classes at be supplied
-        with at least name and description.
+        This constructor should be called from child classes at least be supplied with at least ``name`` and ``description``.
 
-        :param lizy: The `lizy` object, which is initialized and passed by Pylease.
-        :param name: The name of the command, which will appear in the `usage` output
-        :param description: Description of the command
-        :param rollback: The rollback object that will be executed in case of failure during or after the command.
-        This parameter may be emitted if the command does not need a rollback, or may be set in the process of command
-        execution if it depends on some parameters during runtime.
-        :return:
+        Arguments:
+            lizy (pylease.Pylease): The `lizy` object, which is initialized and passed by Pylease.
+            name (str): The name of the command, which will appear in the `usage` output.
+            description (str): Description of the command which will also appear in the help message.
+            rollback (pylease.cmd.rollback.Rollback): The rollback object that will be executed in case of failure during or after the
+                command. This parameter may be emitted if the command does not need a rollback, or may be set in the process of command
+                execution using the :func:`~pylease.cmd.Command.enable_rollback` method, if it depends on some parameters during runtime.
+            requires_project (bool): Boolean indicating whether the command requires to operate on an existing project. E.g. the ``init``
+                command requires an empty directory.
         """
         super(Command, self).__init__()
 
@@ -56,6 +57,14 @@ class Command(object):
 
     @abstractmethod
     def _process_command(self, lizy, args):
+        """
+        The method which should be implemented when inheriting the :class:`~pylease.cmd.Command`. All the command logic must go into this
+        method.
+
+        Arguments:
+            lizy (pylease.Pylease): The :class:`~pylease.Pylease` singleton.
+            args (argparse.Namespace): The arguments passed to the command line while invoking Pylease.
+        """
         pass  # pragma: no cover
 
     def __call__(self, args):
@@ -94,10 +103,22 @@ class Command(object):
                 command(lizy)
 
     def add_before_task(self, task):
+        """
+        Adds a :class:`~pylease.cmd.task.BeforeTask` to the :class:`~pylease.cmd.Command`.
+
+        Arguments:
+            task (pylease.cmd.task.BeforeTask): The task to be added.
+        """
         self.before_tasks.add(task)
         task.set_command(self)
 
     def add_after_task(self, task):
+        """
+        Adds a :class:`~pylease.cmd.task.AfterTask` to the :class:`~pylease.cmd.Command`.
+
+        Arguments:
+            task (pylease.cmd.task.AfterTask): The task to be added.
+        """
         self.after_tasks.add(task)
         task.set_command(self)
 
@@ -106,11 +127,20 @@ class NamedCommand(Command):
     # pylint: disable=W0223, too-few-public-methods
     # NamedCommand is also abstract
     # The number of public methods is reasonable for this kind of class
+    """
+    Same as the :class:`~pylease.cmd.Command` class, however this class enables a little taste of convenience. You can define a class
+    having name with a suffix "\ |pylease_named_command_suffix|\ " and it will automatically assign the prefix of the class name as the
+    command name.
+    """
 
     _SUFFIX = "Command"
     ignore_me = SubclassIgnoreMark('NamedCommand')
 
     def __init__(self, lizy, description, rollback=None, requires_project=True):
+        """
+        Same as :func:`~pylease.cmd.Command.__init__` of :class:`~pylease.cmd.Command` class, except that the ``name`` argument is passed
+        automatically.
+        """
         my_name = self.__class__.__name__
         name = my_name[:-(len(self._SUFFIX))].lower()
 

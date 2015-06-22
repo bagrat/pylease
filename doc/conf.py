@@ -282,6 +282,7 @@ texinfo_documents = [
 # Google Analytics configuration
 googleanalytics_id = 'UA-58471028-2'
 
-rst_epilog = '.. |pylease_version| replace:: %s' % version
+rst_epilog = '.. |pylease_version| replace:: %s\n\n' % version
+rst_epilog += '.. |pylease_named_command_suffix| replace:: %s\n\n' % pylease.cmd.NamedCommand._SUFFIX
 
 napoleon_google_docstring = True

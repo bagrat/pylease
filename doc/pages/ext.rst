@@ -25,9 +25,10 @@ The first step is inheriting the :class:`~pylease.ext.Extension` class, where yo
 which is an instance of :class:`~pylease.Pylease` class, and contains everything you need for your extension.
 
 Extending an existing Pylease command is done by adding a :class:`~pylease.cmd.task.BeforeTask` or :class:`~pylease.cmd.task.AfterTask`
-(or both) to it. What is needed to do is just implement those classes and add their instances to the command that is the subject of
-extension. For both :class:`~pylease.cmd.task.BeforeTask` and :class:`~pylease.cmd.task.AfterTask` you need to inherit and implement
-their :func:`~pylease.cmd.task.BeforeTask.execute` method, which must include the extension logic. Also, in case of
+(or both) to it using the :class:`~pylease.cmd.Command` methods :func:`~pylease.cmd.Command.add_before_task` and
+:func:`~pylease.cmd.Command.add_after_task`. What is needed to do is just implement those classes and add their instances to the command
+that is the subject of extension. For both :class:`~pylease.cmd.task.BeforeTask` and :class:`~pylease.cmd.task.AfterTask` you need to
+inherit and implement their :func:`~pylease.cmd.task.BeforeTask.execute` method, which must include the extension logic. Also, in case of
 :class:`~pylease.cmd.task.AfterTask`, you are provided with the :attr:`~pylease.cmd.task.AfterTask._command_result` attribute, which is
 the result returned by the command being extended.
 
@@ -43,5 +44,7 @@ Adding New Commands
 -------------------
 
 To add a new command to Pylease it is enough to implement a class by inheriting the :class:`~pylease.cmd.Command` class and add it to your
-package
-``__init__.py``.
+package ``__init__.py``. Implementing the :class:`~pylease.cmd.Command` class is implementing the
+:func:`~pylease.cmd.Command._process_command` method. As an additional convenience you can inherit the :class:`~pylease.cmd.NamedCommand`
+class instead.
+

@@ -21,7 +21,6 @@ Following is the list of all configuration parameters with their descriptions.
 
         ``version-files = my_project/__init__.py, setup.py``
 
-.. _use-plugins:
 ``use-plugins``
     A list of external plugins to load. If you have installed ``example_plugin`` package in your Python environment, and want Pylease to
     use that plugin, you just need to add the ``example_plugin`` name to the list of this parameter.
