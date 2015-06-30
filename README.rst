@@ -1,21 +1,21 @@
 Pylease
 =======
 
-.. image:: https://travis-ci.org/n9code/pylease.svg?branch=dev
+.. image:: https://travis-ci.org/n9code/pylease.svg?branch=master
     :target: https://travis-ci.org/n9code/pylease
     :alt: Build Status
 
-.. image:: https://landscape.io/github/n9code/pylease/dev/landscape.svg?style=flat
-    :target: https://landscape.io/github/n9code/pylease/dev
+.. image:: https://landscape.io/github/n9code/pylease/master/landscape.svg?style=flat
+    :target: https://landscape.io/github/n9code/pylease/master
     :alt: Code Health
 
 
-.. image:: https://coveralls.io/repos/n9code/pylease/badge.svg?branch=dev
-    :target: https://coveralls.io/r/n9code/pylease?branch=dev
+.. image:: https://coveralls.io/repos/n9code/pylease/badge.svg?branch=master
+    :target: https://coveralls.io/r/n9code/pylease?branch=master
     :alt: Code Coverage
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
-    :target: https://raw.githubusercontent.com/n9code/pylease/dev/LICENSE
+    :target: https://raw.githubusercontent.com/n9code/pylease/master/LICENSE
     :alt: License
 
 Pylease is a simple package that tends to ease the release process of a regular Python package. The aim of Pylease is to make it as
