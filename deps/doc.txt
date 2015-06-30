@@ -1,3 +1,2 @@
 sphinx
 alabaster
-sphinxcontrib-googleanalytics

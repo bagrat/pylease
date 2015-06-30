@@ -4,10 +4,11 @@ Built-in Plugins
 As you will see in the `Extensing Pylease <ext.html>`__ section, you can customize and extend Pylease the way you like. Fortunately,
 Pylease comes batteries included, with built-in plugins for most common tasks. Now let us take a look at each plugin separatelly.
 
+
 Git
 ---
 
-Pylease support integration with git. You can enable this plugin with the ``--git-tag`` option of the ``make`` command. Consider the
+Pylease supports integration with git. You can enable this plugin with the ``--git-tag`` option of the ``make`` command. Consider the
 following situation::
 
     $ pylease status
@@ -38,7 +39,7 @@ PyPI
 ----
 
 The Pylease PyPI plugin enables to automatically upload your package egg to PyPI. The only prerequisite for this action is that the
-package name must be already registered, as well as you must be responsible for authentication over the `.pypirc <https://docs.python
+package name must be already registered, as well as you must be responsible for the authentication over the `.pypirc <https://docs.python
 .org/2/distutils/packageindex.html#pypirc>`__ file.
 
 To enable this feature during the release process you should just use the ``--pypi`` option like this::

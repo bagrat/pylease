@@ -39,7 +39,7 @@ def main(args=None):
         with ReplacedSetup(info.set_info):
             __import__('setup')
     else:
-        info.is_empty = True
+        info.is_empty = True  # pragma: no cover
 
     # Initialize Lizy
     lizy = pylease.Pylease(parser, sub_parsers, info)

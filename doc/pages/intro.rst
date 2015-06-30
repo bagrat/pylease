@@ -2,7 +2,8 @@ Introduction
 ============
 
 Pylease works on Python projects that are being managed by `setuptools <https://pypi.python.org/pypi/setuptools>`_,
-i.e. have ``setup.py`` file in their root directory. This is enough to make Pylease get things done.
+i.e. have ``setup.py`` file in their root directory. This is enough to make Pylease get things done. Pylease is an extensible modular
+tool, which enables the developers to enhance it further. So let us start with the installation first.
 
 Installation
 ------------
@@ -78,7 +79,7 @@ related, first check out your current status as it is done for an `Existing Proj
 So while you are working on a project, the current version defined is the last version the project was released with. As you can see in
 initialising a `Project from Scratch`_, the initial version is ``0.0``, i.e. no release is done yet.
 
-You may ask a reasonable question, why does the current version represent the version you want to release next? The reason for that is
+You may ask a reasonable question, why does not the current version represent the version you want to release next? The reason for that is
 that it is possible that while working on the project, you might have a minor bug, small feature that will need a rapid release, so you
 will need to make a ``patch`` or ``minor`` level release.
 

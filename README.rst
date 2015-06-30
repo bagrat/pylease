@@ -25,8 +25,7 @@ simple as possible by requiring as little as possible. For more details on using
 Basic Usage
 -----------
 
-Start using pylease by just navigating to you package root (the directory containing
-``setup.py``) and simply use the command-line::
+Start using pylease by just navigating to you package root (the directory containing ``setup.py``) and simply use the command-line::
 
     $ pylease status
 
@@ -36,6 +35,12 @@ Now you will see basic information about your package, like name and version. Th
 
 This will release the package with version '1.0.dev1', i.e. update the version in setup.py. The release levels include ``major, minor,
 patch and dev``.
+
+If you want to initiate a branch new project, perform this::
+
+    $ pylease init my_project
+
+This will prepare and create all needed files and directories for your project skeleton.
 
 Extensions
 ----------
@@ -57,3 +62,14 @@ pylease::
 
 After making the release, you will additionally have a new commit
 containing the setup.py update as well as a new tag pointing to that commit.
+
+PyPI
+~~~~
+
+PyPI extension provides an ability to automatically upload you package distribution to `PyPi
+<http://pypi.python.org>`_ after releasing your project. To enable this feature use the ``--pypi``
+command line option::
+
+    $ pylease make --major --pypi
+
+

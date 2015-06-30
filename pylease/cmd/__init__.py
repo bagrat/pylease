@@ -27,7 +27,7 @@ class Command(object):
 
     def __init__(self, lizy, name, description, rollback=None, requires_project=True):
         """
-        This constructor should be called from child classes at least be supplied with at least ``name`` and ``description``.
+        This constructor should be called from child classes and at least be supplied with at least ``name`` and ``description``.
 
         Arguments:
             lizy (pylease.Pylease): The `lizy` object, which is initialized and passed by Pylease.
@@ -35,7 +35,8 @@ class Command(object):
             description (str): Description of the command which will also appear in the help message.
             rollback (pylease.cmd.rollback.Rollback): The rollback object that will be executed in case of failure during or after the
                 command. This parameter may be emitted if the command does not need a rollback, or may be set in the process of command
-                execution using the :func:`~pylease.cmd.Command.enable_rollback` method, if it depends on some parameters during runtime.
+                execution using the :func:`~pylease.cmd.task.BeforeTask.enable_rollback` method, if it depends on some parameters during
+                runtime.
             requires_project (bool): Boolean indicating whether the command requires to operate on an existing project. E.g. the ``init``
                 command requires an empty directory.
         """
@@ -70,7 +71,7 @@ class Command(object):
     def __call__(self, args):
         with Caution(verbose=args.verbose) as caution:
             if self.requires_project and self._lizy.info_container.is_empty:
-                raise PyleaseError("'{}' command requires an existing project!".format(self.name))
+                raise PyleaseError("'{}' command requires an existing project!".format(self.name))  # pragma: no cover
 
             logme.debug("Executing before tasks.")
             for task in self.before_tasks:
@@ -124,7 +125,7 @@ class Command(object):
 
 
 class NamedCommand(Command):
-    # pylint: disable=W0223, too-few-public-methods
+    # pylint: disable=W0223, W1401, too-few-public-methods
     # NamedCommand is also abstract
     # The number of public methods is reasonable for this kind of class
     """
@@ -260,7 +261,7 @@ version-files = {name}/__init__.py
         self.rollback = rollback
 
         nodes_in_cwd = [node for node in os.listdir('.') if not node.startswith('.')]
-        if nodes_in_cwd:
+        if nodes_in_cwd:  # pragma: no cover
             logme.debug('Directory not empty.\nFollowing files are present:\n%s', nodes_in_cwd)
             raise PyleaseError('Directory not empty.\nSorry, but the directory must be empty to initialise a new project.')
 

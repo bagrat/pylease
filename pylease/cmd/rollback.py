@@ -4,11 +4,10 @@ class Rollback(object):
     """
     This class provides a facility to define a staged rollback process. The scenario of using this class is the following:
 
-    1. Inherit Rollback class
-    2. Define rollback stages as instance methods
-    3. Decorate each rollback method with `Stage` decorator, by specifying stage name and priority
-    4. Enable each stage separately calling `enable_stage` method
-    5. Call `rollback` method, which will execute all enabled rollback stages, ordered by priority
+        #. Inherit :class:`~pylease.cmd.rollback.Rollback` class
+        #. Define rollback stages as instance methods
+        #. Decorate each rollback method with :class:`~pylease.cmd.rollback.Stage` decorator, by specifying stage name and priority
+        #. Enable each stage separately calling :func:`~pylease.cmd.rollback.Rollback.enable_stage` method
     """
     def __init__(self):
         super(Rollback, self).__init__()
@@ -46,8 +45,9 @@ class Rollback(object):
     def enable_stage(self, stage):
         """
         Enable particular stage by name.
-        :param stage: Stage name
-        :return:
+
+        Arguments:
+            stage (str): Stage name to enable.
         """
         rollbacks = self._stages[stage]
 
@@ -62,7 +62,21 @@ class Rollback(object):
 class Stage(object):
     # pylint: disable=too-few-public-methods
     """
-    Decorator used in custom `Rollback` classes for associating each method with a stage, and setting priority
+    Decorator used in custom :class:`~pylease.cmd.rollback.Rollback` classes for associating each method with a stage, and setting priority.
+
+    Arguments:
+        stage (str): The name of the stage.
+        priority (int): The order priority of the stage to be rolled back. Defaults to ``0``.
+
+    Example:
+        Here is an example of how to use the :class:`~pylease.cmd.rollback.Stage` decorator in combination with the
+        :class:`~pylease.cmd.rollback.Rollback` base class::
+
+            class ExampleRollback(Rollback):
+                @Stage('some_stage', 1)
+                def some_stage_with_priority_1(self):
+                    pass  # your some_stage rollback goes here
+
     """
     STAGE_ATTR_NAME = '_stage'
     PRIORITY_ATTR_NAME = '_priority'

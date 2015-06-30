@@ -280,7 +280,7 @@ texinfo_documents = [
 # texinfo_no_detailmenu = False
 
 # Google Analytics configuration
-googleanalytics_id = 'UA-58471028-2'
+# googleanalytics_id = 'UA-58471028-2'
 
 rst_epilog = '.. |pylease_version| replace:: %s\n\n' % version
 rst_epilog += '.. |pylease_named_command_suffix| replace:: %s\n\n' % pylease.cmd.NamedCommand._SUFFIX

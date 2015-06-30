@@ -2,8 +2,8 @@ import ConfigParser
 from pylease.logger import LOGME as logme  # noqa
 import os
 
-import cmd
-import ext
+import pylease.cmd
+import pylease.ext
 
 __version__ = '0.2'
 

@@ -21,6 +21,12 @@ class BeforeTask(object):
         self._needs_rollback = False
 
     def enable_rollback(self, rollback=None):
+        """
+        Enables a rollback for the task. The provided rollback gets executed in case of failure in the execution stack.
+
+        Attributes:
+            rollback (pylease.cmd.rollback.Rollback): The rollback instance for the task.
+        """
         if rollback:
             if self._rollback:
                 logme.debug('Overwriting existing rollback for task "%s"', self.__class__.__name__)

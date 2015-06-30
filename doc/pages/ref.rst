@@ -23,6 +23,8 @@ Class Reference
 
         .. automethod:: execute
 
+        .. automethod:: enable_rollback
+
     .. autoclass:: AfterTask
 
         .. automethod:: execute
@@ -44,3 +46,14 @@ Class Reference
     .. autoclass:: NamedCommand
 
         .. automethod:: __init__
+
+
+.. automodule:: pylease.cmd.rollback
+
+    .. autoclass:: Rollback
+
+        .. automethod:: enable_stage
+
+        .. automethod:: rollback
+
+    .. autoclass:: Stage
