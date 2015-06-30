@@ -34,7 +34,7 @@ import pylease
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.coverage',
-    'sphinxcontrib.napoleon'
+    'sphinx.ext.napoleon'
     # 'sphinx.ext.viewcode',
     # 'sphinxcontrib.googleanalytics',
 ]
