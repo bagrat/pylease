@@ -6,13 +6,11 @@ import os
 download_url = "https://github.com/n9code/pylease/archive/v{version}.tar.gz".format(version=pylease.__version__)
 
 here = os.path.abspath(os.path.dirname(__file__))
-print(here)
 here_path = partial(os.path.join, here)
 deps_test_path = here_path('deps/test.txt')
 deps_core_path = here_path('deps/core.txt')
 readme_path = here_path('README.rst')
 
-print(deps_core_path)
 
 with open(deps_test_path) as req:
     tests_require = req.read().split('\n')
