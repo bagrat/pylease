@@ -1,15 +1,24 @@
+from functools import partial
 from setuptools import setup, find_packages
 import pylease
+import os
 
 download_url = "https://github.com/n9code/pylease/archive/v{version}.tar.gz".format(version=pylease.__version__)
 
-with open('./deps/test.txt') as req:
+here = os.path.abspath(os.path.dirname(__file__))
+here_path = partial(os.path.join, here)
+deps_test_path = here_path('deps/test.txt')
+deps_core_path = here_path('deps/core.txt')
+readme_path = here_path('README.rst')
+
+
+with open(deps_test_path) as req:
     tests_require = req.read().split('\n')
 
-with open('./deps/core.txt') as req:
+with open(deps_core_path) as req:
     install_requires = req.read().split('\n')
 
-with open('./README.rst') as desc:
+with open(readme_path) as desc:
     long_desc = desc.read()
 
 classifiers = ['License :: OSI Approved :: MIT License',

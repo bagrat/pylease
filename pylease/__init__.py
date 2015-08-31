@@ -5,7 +5,7 @@ import os
 import pylease.cmd
 import pylease.ext
 
-__version__ = '0.3'
+__version__ = '0.3.1'
 
 
 class Pylease(object):
